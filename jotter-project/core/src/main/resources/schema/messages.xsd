@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+  ~ Copyright 2015 Kislitsyn Ilya
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           targetNamespace="http://github.com/kilel/jotter/msg"
+           xmlns="http://github.com/kilel/jotter/msg"
+           xmlns:common="http://github.com/kilel/jotter/common"
+           elementFormDefault="qualified">
+
+    <xs:import namespace="http://github.com/kilel/jotter/common"
+               schemaLocation="./common.xsd"/>
+
+    <xs:element name="loadRequest">
+        <xs:annotation>
+            <xs:documentation xml:lang="en">
+                Request to load noted. Loads encrypted notes.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="common:AbstractRequest">
+                    <xs:choice>
+                        <xs:element name="lastSynchId" type="common:SynchIdType">
+                            <xs:annotation>
+                                <xs:documentation xml:lang="en">
+                                    Last synchronization ID.
+                                    If exists, then only newer notes are loaded.
+                                </xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                        <xs:element ref="common:noteIdList">
+                            <xs:annotation>
+                                <xs:documentation xml:lang="en">
+                                    List of note identifiers to load.
+                                </xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                    </xs:choice>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="loadResponse">
+        <xs:annotation>
+            <xs:documentation xml:lang="en">
+                 Loaded notes.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="common:AbstractResponse">
+                    <xs:sequence>
+                        <xs:element ref="common:encodedNoteList" minOccurs="0">
+                            <xs:annotation>
+                                <xs:documentation xml:lang="en">
+                                    List of encoded notes.
+                                </xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                        <xs:element name="lastSynchId" type="common:SynchIdType">
+                            <xs:annotation>
+                                <xs:documentation xml:lang="en">
+                                    If loaded with synchId, this is new synchId.
+                                </xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                    </xs:sequence>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="updateRequest">
+        <xs:annotation>
+            <xs:documentation xml:lang="en">
+                Request to update or create note.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="common:AbstractRequest">
+                    <xs:sequence>
+                        <xs:element ref="common:encodedNoteList" minOccurs="0">
+                            <xs:annotation>
+                                <xs:documentation xml:lang="en">
+                                    List of encoded notes.
+                                </xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                    </xs:sequence>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="updateResponse">
+        <xs:annotation>
+            <xs:documentation xml:lang="en">
+                Update result.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="common:AbstractResponse"/>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+
+</xs:schema>
