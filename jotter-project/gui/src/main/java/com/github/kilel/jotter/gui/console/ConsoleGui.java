@@ -29,15 +29,34 @@ import java.util.function.Function;
  * Console GUI.
  */
 public class ConsoleGui extends JotterGui {
-    private Logger log = LogManager.commonLog();
-    private Map<String, Function<Scanner, Boolean>> actions;
+    private final Logger log = LogManager.commonLog();
+    private final Map<String, Function<Scanner, Boolean>> actions;
 
     public ConsoleGui() {
         actions = new HashMap<>();
         actions.put("stop", (x) -> {
             return false;
         });
-        // TODO add some basic operations: load, add, update, remove
+        actions.put("list", (x) -> {
+            // TODO
+            return true;
+        });
+        actions.put("add", (x) -> {
+            // TODO
+            return true;
+        });
+        actions.put("remove", (x) -> {
+            // TODO
+            return true;
+        });
+        actions.put("update", (x) -> {
+            // TODO
+            return true;
+        });
+        actions.put("help", (x) -> {
+            // TODO
+            return true;
+        });
     }
 
     public static void main(String[] args) {
@@ -46,11 +65,12 @@ public class ConsoleGui extends JotterGui {
     }
 
     @Override
-    public void start() {
+    public void startInternal() {
         log.info("Starting Jotter console GUI");
         final Scanner scanner = new Scanner(System.in);
 
         while (scanner.hasNext()) {
+            log.info("Waiting for command");
             if (!execute(scanner, scanner.next())) {
                 break;
             }
@@ -58,10 +78,12 @@ public class ConsoleGui extends JotterGui {
 
         log.info("Stopping Jotter console GUI");
         scanner.close();
+        stop();
     }
 
     @Override
-    public void stop() {
+    public void stopInternal() {
+
     }
 
     boolean execute(Scanner scanner, String command) {

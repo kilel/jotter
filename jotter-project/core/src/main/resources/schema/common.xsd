@@ -89,17 +89,11 @@
         <xs:attribute name="uuid" type="xs:string"/>
     </xs:complexType>
 
-    <xs:element name="encodedNote">
+    <xs:element name="encryptedNote">
         <xs:complexType>
             <xs:all>
                 <xs:element name="value" type="xs:base64Binary"/>
-                <xs:element name="encryptionRules">
-                    <xs:complexType>
-                        <xs:sequence>
-                            <xs:element name="ruleId" type="xs:string"/>
-                        </xs:sequence>
-                    </xs:complexType>
-                </xs:element>
+                <xs:element name="encryptorId" type="xs:string"/>
             </xs:all>
         </xs:complexType>
     </xs:element>
@@ -128,10 +122,10 @@
         </xs:complexType>
     </xs:element>
 
-    <xs:element name="encodedNoteList">
+    <xs:element name="encryptedNoteList">
         <xs:complexType>
             <xs:sequence minOccurs="0" maxOccurs="unbounded">
-                <xs:element ref="encodedNote"/>
+                <xs:element ref="encryptedNote"/>
             </xs:sequence>
         </xs:complexType>
     </xs:element>

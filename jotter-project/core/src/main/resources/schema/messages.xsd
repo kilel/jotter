@@ -66,7 +66,7 @@
             <xs:complexContent>
                 <xs:extension base="common:AbstractResponse">
                     <xs:sequence>
-                        <xs:element ref="common:encodedNoteList" minOccurs="0">
+                        <xs:element ref="common:encryptedNoteList" minOccurs="0">
                             <xs:annotation>
                                 <xs:documentation xml:lang="en">
                                     List of encoded notes.
@@ -96,7 +96,7 @@
             <xs:complexContent>
                 <xs:extension base="common:AbstractRequest">
                     <xs:sequence>
-                        <xs:element ref="common:encodedNoteList" minOccurs="0">
+                        <xs:element ref="common:encryptedNoteList" minOccurs="0">
                             <xs:annotation>
                                 <xs:documentation xml:lang="en">
                                     List of encoded notes.

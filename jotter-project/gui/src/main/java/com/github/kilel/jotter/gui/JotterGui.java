@@ -18,20 +18,53 @@ package com.github.kilel.jotter.gui;
 
 import com.github.kilel.jotter.dao.DaoBridge;
 import com.github.kilel.jotter.dao.factory.DaoBridgeFactory;
+import com.github.kilel.jotter.encryptor.EncryptionContext;
+import com.github.kilel.jotter.encryptor.impl.EncryptionContextImpl;
 import com.github.kilel.jotter.log.LogManager;
+import com.github.kilel.jotter.util.NotesHolder;
+import com.github.kilel.jotter.util.NotesHolderImpl;
+import com.github.kilel.jotter.util.NotesSynchronizer;
 
 /**
  * Common GUI facade.
  */
 public abstract class JotterGui {
     private final DaoBridge daoBridge;
+    private final NotesHolder notesHolder;
+    private final EncryptionContext encryptionContext;
+    private final NotesSynchronizer notesSynchronizer;
 
     public JotterGui() {
         LogManager.init();
         daoBridge = new DaoBridgeFactory().create("config"); // TODO implement configuration
+        notesHolder = new NotesHolderImpl();
+        encryptionContext = new EncryptionContextImpl();
+        notesSynchronizer = new NotesSynchronizer(daoBridge, notesHolder, encryptionContext);
     }
 
-    public abstract void start();
+    protected DaoBridge getDaoBridge() {
+        return daoBridge;
+    }
 
-    public abstract void stop();
+    public NotesHolder getNotesHolder() {
+        return notesHolder;
+    }
+
+    public EncryptionContext getEncryptionContext() {
+        return encryptionContext;
+    }
+
+    public final void start() {
+        notesSynchronizer.start();
+        startInternal();
+    }
+
+    public final void stop() {
+        notesSynchronizer.stop();
+        stopInternal();
+    }
+
+    public abstract void startInternal();
+
+    public abstract void stopInternal();
 }

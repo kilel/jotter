@@ -16,33 +16,66 @@
 
 package com.github.kilel.jotter.command.impl;
 
-import com.github.kilel.jotter.dao.DaoBridge;
 import com.github.kilel.jotter.command.Command;
+import com.github.kilel.jotter.dao.DaoBridge;
+import com.github.kilel.jotter.encryptor.EncryptionContext;
+import com.github.kilel.jotter.encryptor.Encryptor;
+import com.github.kilel.jotter.log.LogManager;
 import com.github.kilel.jotter.msg.LoadResponse;
+import com.github.kilel.jotter.util.NotesHolder;
+import org.apache.log4j.Logger;
 
 import java.math.BigInteger;
-import java.util.function.Consumer;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * Synchronization command.
  */
 public class SynchCommand extends Command {
-    private final Consumer<LoadResponse> consumer;
+    private final Logger log = LogManager.commonLog();
+    private final NotesHolder holder;
+    private final EncryptionContext encryptionContext;
+    private final Lock lock;
 
     private BigInteger lastSynchId = null;
 
-    public SynchCommand(DaoBridge daoBridge, Consumer<LoadResponse> consumer) {
+
+    public SynchCommand(DaoBridge daoBridge, NotesHolder holder, EncryptionContext encryptionContext) {
         super(daoBridge);
-        this.consumer = consumer;
+        this.holder = holder;
+        this.encryptionContext = encryptionContext;
+        this.lock = new ReentrantLock();
     }
 
     @Override
     public void run() {
-        final LoadResponse response = getDaoBridge().load(getRequestFactory().createLoad(lastSynchId));
-        if (isSuccessful(response) && response.getLastSynchId() != null) {
-            lastSynchId = response.getLastSynchId();
+        // Try to lock synchronization.
+        // If it is in progress, no need to start new.
+        if(!lock.tryLock()) {
+            return;
         }
 
-        consumer.accept(response);
+        try {
+            log.debug("Starting notes synchronization");
+
+            final LoadResponse response = getDaoBridge().load(getRequestFactory().createLoad(lastSynchId));
+            if (isSuccessful(response) && response.getLastSynchId() != null) {
+                lastSynchId = response.getLastSynchId();
+            }
+
+            response.getEncryptedNoteList().getEncryptedNote().stream() //
+                    .forEach((note) -> {
+                        final String uniqueId = note.getEncryptorId();
+                        final Encryptor encryptor = encryptionContext.get(uniqueId);
+                        if (encryptor != null) {
+                            holder.create(encryptor.decrypt(note));
+                        }
+                    });
+
+            log.debug("Notes synchronization finished");
+        } finally {
+            lock.unlock();
+        }
     }
 }
