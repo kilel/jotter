@@ -38,7 +38,7 @@ public class SynchCommand extends Command {
     private final EncryptionContext encryptionContext;
     private final Lock lock;
 
-    private BigInteger lastSynchId = null;
+    private BigInteger lastSynchId = BigInteger.ZERO;
 
 
     public SynchCommand(DaoBridge daoBridge, NotesHolder holder, EncryptionContext encryptionContext) {
@@ -52,7 +52,7 @@ public class SynchCommand extends Command {
     public void run() {
         // Try to lock synchronization.
         // If it is in progress, no need to start new.
-        if(!lock.tryLock()) {
+        if (!lock.tryLock()) {
             return;
         }
 
@@ -60,7 +60,9 @@ public class SynchCommand extends Command {
             log.debug("Starting notes synchronization");
 
             final LoadResponse response = getDaoBridge().load(getRequestFactory().createLoad(lastSynchId));
-            if (isSuccessful(response) && response.getLastSynchId() != null) {
+            if (isSuccessful(response)  //
+                    && response.getLastSynchId() != null //
+                    && lastSynchId.compareTo(response.getLastSynchId()) < 0) {
                 lastSynchId = response.getLastSynchId();
             }
 
@@ -68,6 +70,7 @@ public class SynchCommand extends Command {
                     .forEach((note) -> {
                         final String uniqueId = note.getEncryptorId();
                         final Encryptor encryptor = encryptionContext.get(uniqueId);
+
                         if (encryptor != null) {
                             holder.create(encryptor.decrypt(note));
                         }

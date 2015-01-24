@@ -17,6 +17,8 @@
 package com.github.kilel.jotter.util;
 
 import com.github.kilel.jotter.common.Note;
+import com.github.kilel.jotter.log.LogManager;
+import org.apache.log4j.Logger;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -28,7 +30,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * Hash map implementation of notes holder.
  */
 public class NotesHolderImpl implements NotesHolder {
-
+    private final Logger log = LogManager.commonLog();
     private final Set<Listener> listeners;
     private final Map<String, Map<String, Note>> categories;
 
@@ -95,9 +97,11 @@ public class NotesHolderImpl implements NotesHolder {
 
     @Override
     public void create(Note note) throws IllegalArgumentException {
+        log.info("Creating " + NoteUtils.toString(note));
         // Ensure, that there is no such note
         if (get(note.getCategory(), note.getName()) != null) {
-            throw new IllegalArgumentException("Note already exists!");
+            update(get(note.getCategory(), note.getName()), note);
+            return;
         }
 
         // Create new note and update with target data.
@@ -108,6 +112,7 @@ public class NotesHolderImpl implements NotesHolder {
 
     @Override
     public void update(Note source, Note dest) {
+        log.info(String.format("Updating %s to %s", NoteUtils.toString(source), NoteUtils.toString(dest)));
         // Check, that they have equal category-name
         if(NoteUtils.checkEquals(source, dest)) {
             Note noteToUpdate = get(source.getCategory(), source.getName());
@@ -123,6 +128,7 @@ public class NotesHolderImpl implements NotesHolder {
 
     @Override
     public void remove(Note note) {
+        log.info("Removing " + NoteUtils.toString(note));
         Map<String, Note> category = getCategory(note.getCategory());
         if (getNote(note.getCategory(), note.getName()) != null) {
             category.remove(note.getName());

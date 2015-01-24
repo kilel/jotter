@@ -18,6 +18,7 @@ package com.github.kilel.jotter.dao.factory;
 
 import com.github.kilel.jotter.dao.DaoBridge;
 import com.github.kilel.jotter.dao.impl.FileDaoBridge;
+import com.github.kilel.jotter.dao.impl.RAMDaoBridge;
 
 /**
  * Creates DAO bridge.
@@ -25,6 +26,6 @@ import com.github.kilel.jotter.dao.impl.FileDaoBridge;
 public class DaoBridgeFactory {
 
     public DaoBridge create(String type) {
-        return new FileDaoBridge();
+        return new RAMDaoBridge();
     }
 }

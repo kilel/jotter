@@ -92,9 +92,11 @@
     <xs:element name="encryptedNote">
         <xs:complexType>
             <xs:all>
+                <xs:element name="synchId" type="SynchIdType"/>
                 <xs:element name="value" type="xs:base64Binary"/>
                 <xs:element name="encryptorId" type="xs:string"/>
             </xs:all>
+            <xs:attribute name="id" type="NoteIdType"/>
         </xs:complexType>
     </xs:element>
 

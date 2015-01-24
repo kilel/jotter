@@ -54,6 +54,10 @@ public abstract class JotterGui {
         return encryptionContext;
     }
 
+    public NotesSynchronizer getNotesSynchronizer() {
+        return notesSynchronizer;
+    }
+
     public final void start() {
         notesSynchronizer.start();
         startInternal();
@@ -67,4 +71,5 @@ public abstract class JotterGui {
     public abstract void startInternal();
 
     public abstract void stopInternal();
+
 }

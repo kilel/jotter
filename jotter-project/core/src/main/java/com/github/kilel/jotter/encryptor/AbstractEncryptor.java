@@ -40,7 +40,8 @@ public abstract class AbstractEncryptor implements Encryptor {
     public AbstractEncryptor(String uniqueId) {
         try {
             this.uniqueId = uniqueId;
-            context = JAXBContext.newInstance(com.github.kilel.jotter.msg.ObjectFactory.class);
+            context = JAXBContext.newInstance(com.github.kilel.jotter.msg.ObjectFactory.class,
+                                              com.github.kilel.jotter.common.ObjectFactory.class);
         } catch (Exception e) {
             throw new RuntimeException("Can't create JAXB context for jotter", e);
         }
@@ -60,6 +61,8 @@ public abstract class AbstractEncryptor implements Encryptor {
 
             // Encrypt string
             final EncryptedNote note = new EncryptedNote();
+            note.setId(source.getId());
+            note.setSynchId(source.getSynchId());
             note.setValue(doEncrypt(writer.toString()));
             note.setEncryptorId(getUniqueId());
             return note;
@@ -78,7 +81,10 @@ public abstract class AbstractEncryptor implements Encryptor {
 
             // Unmarshal note to string
             final StringReader reader = new StringReader(doDecrypt(source.getValue()));
-            return (Note) unmarshaller.unmarshal(reader);
+            final Note note = (Note) unmarshaller.unmarshal(reader);
+            note.setId(source.getId());
+            note.setSynchId(source.getSynchId());
+            return note;
         } catch (Exception e) {
             throw new RuntimeException("Failed to encrypt note", e);
         }

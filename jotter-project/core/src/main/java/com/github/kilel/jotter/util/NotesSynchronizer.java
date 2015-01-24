@@ -49,7 +49,7 @@ public class NotesSynchronizer {
             return;
         }
 
-        log.debug("Creating notes synchronization schedule");
+        log.info("Creating notes synchronization schedule");
         schedule = Executors.newScheduledThreadPool(1);
         schedule.scheduleAtFixedRate(synchCommand, 0, delay, TimeUnit.SECONDS);
         isStarted = true;
@@ -63,7 +63,7 @@ public class NotesSynchronizer {
             return;
         }
 
-        log.debug("Deleting synchronization schedule");
+        log.info("Deleting synchronization schedule");
         schedule.shutdown();
         isStarted = false;
     }

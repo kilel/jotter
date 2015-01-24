@@ -16,10 +16,16 @@
 
 package com.github.kilel.jotter.gui.console;
 
+import com.github.kilel.jotter.common.EncryptedNote;
+import com.github.kilel.jotter.common.Note;
+import com.github.kilel.jotter.dao.factory.RequestFactory;
 import com.github.kilel.jotter.gui.JotterGui;
 import com.github.kilel.jotter.log.LogManager;
+import com.github.kilel.jotter.util.NoteUtils;
 import org.apache.log4j.Logger;
 
+import java.math.BigInteger;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
@@ -38,11 +44,43 @@ public class ConsoleGui extends JotterGui {
             return false;
         });
         actions.put("list", (x) -> {
-            // TODO
+            StringBuilder builder = new StringBuilder("Notes:\n");
+            for (String category : getNotesHolder().getCategories()) {
+                builder.append(category).append("\n");
+                for (String name : getNotesHolder().getNames(category)) {
+                    builder.append("\t").append(name).append("\n");
+                }
+            }
+            log.info(builder.toString());
             return true;
         });
         actions.put("add", (x) -> {
-            // TODO
+            Note note = new Note();
+            log.info("Category:");
+            note.setCategory(x.nextLine().trim());
+            log.info("Name:");
+            note.setName(x.nextLine().trim());
+            log.info("Value:");
+            note.setValue(x.nextLine().trim());
+            note.setId(0);
+            note.setSynchId(BigInteger.ZERO);
+
+            EncryptedNote result = getEncryptionContext().get("").encrypt(note);
+            getDaoBridge().update(RequestFactory.createUpdate(Collections.singletonList(result)));
+            getNotesSynchronizer().immediate();
+            return true;
+        });
+        actions.put("view", (x) -> {
+            log.info("Category:");
+            String category = x.nextLine().trim();
+            log.info("Name:");
+            String name = x.nextLine().trim();
+            Note note = getNotesHolder().get(category, name);
+            if (note == null) {
+                log.info("No such note");
+            } else {
+                log.info(NoteUtils.toString(note));
+            }
             return true;
         });
         actions.put("remove", (x) -> {
@@ -68,12 +106,12 @@ public class ConsoleGui extends JotterGui {
     public void startInternal() {
         log.info("Starting Jotter console GUI");
         final Scanner scanner = new Scanner(System.in);
-
-        while (scanner.hasNext()) {
-            log.info("Waiting for command");
-            if (!execute(scanner, scanner.next())) {
+        log.info("Waiting for command");
+        while (scanner.hasNextLine()) {
+            if (!execute(scanner, scanner.nextLine())) {
                 break;
             }
+            log.info("Waiting for command");
         }
 
         log.info("Stopping Jotter console GUI");
@@ -91,7 +129,12 @@ public class ConsoleGui extends JotterGui {
         log.info(String.format("Executing console gui command %s", command));
 
         if (actions.containsKey(command)) {
-            return actions.get(command).apply(scanner);
+            try {
+                return actions.get(command).apply(scanner);
+            } catch (Exception e) {
+                log.error("Error executing command", e);
+                return true;
+            }
         } else {
             log.info(String.format("Unknown command %s", command));
             return true;

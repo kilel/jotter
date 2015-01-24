@@ -29,13 +29,13 @@ import java.util.UUID;
  */
 public final class RequestFactory {
 
-    public LoadRequest createLoad(final BigInteger lastSynchId) {
+    public static LoadRequest createLoad(final BigInteger lastSynchId) {
         final LoadRequest request = createBaseRequest(LoadRequest.class);
         request.setLastSynchId(lastSynchId);
         return request;
     }
 
-    public LoadRequest createLoad(final List<Integer> noteIds) {
+    public static LoadRequest createLoad(final List<Integer> noteIds) {
         final LoadRequest request = createBaseRequest(LoadRequest.class);
         final NoteIdList noteIdList = new NoteIdList();
         noteIdList.getId().addAll(noteIds);
@@ -43,7 +43,7 @@ public final class RequestFactory {
         return request;
     }
 
-    public UpdateRequest createUpdate(final List<EncryptedNote> notes) {
+    public static UpdateRequest createUpdate(final List<EncryptedNote> notes) {
         final UpdateRequest request = createBaseRequest(UpdateRequest.class);
         final EncryptedNoteList noteList= new EncryptedNoteList();
         noteList.getEncryptedNote().addAll(notes);

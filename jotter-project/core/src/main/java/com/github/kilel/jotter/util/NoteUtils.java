@@ -16,7 +16,11 @@
 
 package com.github.kilel.jotter.util;
 
+import com.github.kilel.jotter.common.EncryptedNote;
 import com.github.kilel.jotter.common.Note;
+
+import java.math.BigInteger;
+import java.util.Comparator;
 
 /**
  * Utility functions.
@@ -41,4 +45,26 @@ public class NoteUtils {
         return a.getCategory().equalsIgnoreCase(b.getCategory()) //
                 && a.getName().equalsIgnoreCase(b.getName());
     }
+
+    public static void update(EncryptedNote source, EncryptedNote dest) {
+        dest.setId(source.getId());
+        dest.setSynchId(source.getSynchId());
+        dest.setValue(source.getValue());
+        dest.setEncryptorId(source.getEncryptorId());
+    }
+
+
+    public static String toString(Note note) {
+        return String.format("Note(category = %s, name = %s, id = %s, synchId = %s, value = %s)", //
+                             note.getCategory(), note.getName(), note.getId(), note.getSynchId(), note.getValue());
+    }
+
+
+    public static class BigIntegerComparator implements Comparator<BigInteger> {
+        @Override
+        public int compare(BigInteger a, BigInteger b) {
+            return a.compareTo(b);
+        }
+    }
+
 }
