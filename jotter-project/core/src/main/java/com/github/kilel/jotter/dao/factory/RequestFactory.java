@@ -43,11 +43,9 @@ public final class RequestFactory {
         return request;
     }
 
-    public static UpdateRequest createUpdate(final List<EncryptedNote> notes) {
+    public static UpdateRequest createUpdate(final EncryptedNote note) {
         final UpdateRequest request = createBaseRequest(UpdateRequest.class);
-        final EncryptedNoteList noteList= new EncryptedNoteList();
-        noteList.getEncryptedNote().addAll(notes);
-        request.setEncryptedNoteList(noteList);
+        request.setEncryptedNote(note);
         return request;
     }
 

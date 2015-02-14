@@ -16,9 +16,9 @@
 
 package com.github.kilel.jotter.command;
 
+import com.github.kilel.jotter.JotterContext;
 import com.github.kilel.jotter.common.AbstractResponse;
 import com.github.kilel.jotter.common.DaoResultCode;
-import com.github.kilel.jotter.dao.DaoBridge;
 import com.github.kilel.jotter.dao.factory.RequestFactory;
 
 /**
@@ -26,19 +26,18 @@ import com.github.kilel.jotter.dao.factory.RequestFactory;
  */
 public abstract class Command implements Runnable {
     private final RequestFactory requestFactory = new RequestFactory();
-    private final DaoBridge daoBridge;
+    private final JotterContext context;
 
-    public Command(final DaoBridge daoBridge) {
-
-        this.daoBridge = daoBridge;
+    public Command(final JotterContext context) {
+        this.context= context;
     }
 
     public RequestFactory getRequestFactory() {
         return requestFactory;
     }
 
-    protected DaoBridge getDaoBridge() {
-        return daoBridge;
+    public JotterContext getContext() {
+        return context;
     }
 
     protected final boolean isSuccessful(AbstractResponse response) {

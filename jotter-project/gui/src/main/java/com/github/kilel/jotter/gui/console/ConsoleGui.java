@@ -16,11 +16,16 @@
 
 package com.github.kilel.jotter.gui.console;
 
+import com.github.kilel.jotter.command.Command;
+import com.github.kilel.jotter.command.impl.UpdateCommand;
 import com.github.kilel.jotter.common.EncryptedNote;
 import com.github.kilel.jotter.common.Note;
+import com.github.kilel.jotter.dao.DaoBridge;
 import com.github.kilel.jotter.dao.factory.RequestFactory;
 import com.github.kilel.jotter.gui.JotterGui;
+import com.github.kilel.jotter.gui.console.util.UpdateConsoleArgsLoader;
 import com.github.kilel.jotter.log.LogManager;
+import com.github.kilel.jotter.msg.UpdateResponse;
 import com.github.kilel.jotter.util.NoteUtils;
 import org.apache.log4j.Logger;
 
@@ -45,29 +50,13 @@ public class ConsoleGui extends JotterGui {
         });
         actions.put("list", (x) -> {
             StringBuilder builder = new StringBuilder("Notes:\n");
-            for (String category : getNotesHolder().getCategories()) {
+            for (String category : getContext().getHolder().getCategories()) {
                 builder.append(category).append("\n");
-                for (String name : getNotesHolder().getNames(category)) {
+                for (String name : getContext().getHolder().getNames(category)) {
                     builder.append("\t").append(name).append("\n");
                 }
             }
             log.info(builder.toString());
-            return true;
-        });
-        actions.put("add", (x) -> {
-            Note note = new Note();
-            log.info("Category:");
-            note.setCategory(x.nextLine().trim());
-            log.info("Name:");
-            note.setName(x.nextLine().trim());
-            log.info("Value:");
-            note.setValue(x.nextLine().trim());
-            note.setId(0);
-            note.setSynchId(BigInteger.ZERO);
-
-            EncryptedNote result = getEncryptionContext().get("").encrypt(note);
-            getDaoBridge().update(RequestFactory.createUpdate(Collections.singletonList(result)));
-            getNotesSynchronizer().immediate();
             return true;
         });
         actions.put("view", (x) -> {
@@ -75,7 +64,7 @@ public class ConsoleGui extends JotterGui {
             String category = x.nextLine().trim();
             log.info("Name:");
             String name = x.nextLine().trim();
-            Note note = getNotesHolder().get(category, name);
+            Note note = getContext().getHolder().get(category, name);
             if (note == null) {
                 log.info("No such note");
             } else {
@@ -83,16 +72,20 @@ public class ConsoleGui extends JotterGui {
             }
             return true;
         });
+        actions.put("add", (x) -> {
+            new UpdateCommand(getContext(), new UpdateConsoleArgsLoader(x, "add")).run();
+            return true;
+        });
         actions.put("remove", (x) -> {
-            // TODO
+            new UpdateCommand(getContext(), new UpdateConsoleArgsLoader(x, "remove")).run();
             return true;
         });
         actions.put("update", (x) -> {
-            // TODO
+            new UpdateCommand(getContext(), new UpdateConsoleArgsLoader(x, "update")).run();
             return true;
         });
         actions.put("help", (x) -> {
-            // TODO
+            log.info("Command list: add, update, remove, list, view, stop");
             return true;
         });
     }

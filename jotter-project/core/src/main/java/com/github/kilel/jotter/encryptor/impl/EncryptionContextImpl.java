@@ -16,6 +16,8 @@
 
 package com.github.kilel.jotter.encryptor.impl;
 
+import com.github.kilel.jotter.OrdinaryJotterException;
+import com.github.kilel.jotter.common.DaoResultCode;
 import com.github.kilel.jotter.encryptor.EncryptionContext;
 import com.github.kilel.jotter.encryptor.Encryptor;
 import com.github.kilel.jotter.log.LogManager;
@@ -34,7 +36,7 @@ public class EncryptionContextImpl implements EncryptionContext{
     public  EncryptionContextImpl() {
         holder = new HashMap<>();
 
-        holder.put("", new IdentityEncryptor());
+        holder.put("None", new IdentityEncryptor());
     }
 
     @Override
@@ -42,8 +44,9 @@ public class EncryptionContextImpl implements EncryptionContext{
         if(holder.containsKey(uniqueId)) {
             return holder.get(uniqueId);
         } else {
-            log.warn(String.format("Can't find encryptor with uniqueId = [%s]", uniqueId));
-            return null;
+            String message = String.format("Can't find encryptor with uniqueId = [%s]", uniqueId);
+            log.warn(message);
+            throw new OrdinaryJotterException(DaoResultCode.ENCRYPTOR_NOT_FOUND, message);
         }
     }
 }

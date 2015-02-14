@@ -59,7 +59,7 @@
     <xs:element name="loadResponse">
         <xs:annotation>
             <xs:documentation xml:lang="en">
-                 Loaded notes.
+                Loaded notes.
             </xs:documentation>
         </xs:annotation>
         <xs:complexType>
@@ -96,13 +96,7 @@
             <xs:complexContent>
                 <xs:extension base="common:AbstractRequest">
                     <xs:sequence>
-                        <xs:element ref="common:encryptedNoteList" minOccurs="0">
-                            <xs:annotation>
-                                <xs:documentation xml:lang="en">
-                                    List of encoded notes.
-                                </xs:documentation>
-                            </xs:annotation>
-                        </xs:element>
+                        <xs:element ref="common:encryptedNote"/>
                     </xs:sequence>
                 </xs:extension>
             </xs:complexContent>
@@ -117,7 +111,17 @@
         </xs:annotation>
         <xs:complexType>
             <xs:complexContent>
-                <xs:extension base="common:AbstractResponse"/>
+                <xs:extension base="common:AbstractResponse">
+                    <xs:sequence>
+                        <xs:element ref="common:encryptedNote">
+                            <xs:annotation>
+                                <xs:documentation>
+                                    Updated note (with correct synchId and ID).
+                                </xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                    </xs:sequence>
+                </xs:extension>
             </xs:complexContent>
         </xs:complexType>
     </xs:element>

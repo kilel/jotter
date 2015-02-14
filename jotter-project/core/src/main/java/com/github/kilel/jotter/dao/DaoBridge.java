@@ -26,6 +26,7 @@ import com.github.kilel.jotter.msg.UpdateResponse;
  * Provides access to notes.
  */
 public interface DaoBridge {
+    Integer ID_TO_CREATE_NEW_NOTE = 0;
 
     /**
      * Loads notes.

@@ -26,6 +26,13 @@ import com.github.kilel.jotter.dao.impl.RAMDaoBridge;
 public class DaoBridgeFactory {
 
     public DaoBridge create(String type) {
-        return new RAMDaoBridge();
+        switch(type){
+            case "mem":
+                return new RAMDaoBridge();
+            case "file":
+                return new FileDaoBridge();
+        }
+
+        throw new IllegalArgumentException(String.format("No DAO bridge with type %s supported", type));
     }
 }

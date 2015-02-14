@@ -16,6 +16,7 @@
 
 package com.github.kilel.jotter.util;
 
+import com.github.kilel.jotter.JotterContext;
 import com.github.kilel.jotter.command.Command;
 import com.github.kilel.jotter.command.impl.SynchCommand;
 import com.github.kilel.jotter.dao.DaoBridge;
@@ -37,8 +38,8 @@ public class NotesSynchronizer {
     private ScheduledExecutorService schedule;
     private boolean isStarted = false;
 
-    public NotesSynchronizer(DaoBridge daoBridge, NotesHolder holder, EncryptionContext encryptionContext) {
-        this.synchCommand = new SynchCommand(daoBridge, holder, encryptionContext);
+    public NotesSynchronizer(JotterContext context) {
+        this.synchCommand = new SynchCommand(context);
     }
 
     /**

@@ -41,9 +41,19 @@ public class NoteUtils {
         dest.setValue(source.getValue());
     }
 
+    public static String getNotePath(Note note) {
+        return String.format("%s.%s", note.getCategory(), note.getId());
+    }
+
     public static boolean checkEquals(Note a, Note b) {
         return a.getCategory().equalsIgnoreCase(b.getCategory()) //
                 && a.getName().equalsIgnoreCase(b.getName());
+    }
+
+    public static EncryptedNote copy(EncryptedNote source) {
+        final EncryptedNote dest = new EncryptedNote();
+        update(source, dest);
+        return dest;
     }
 
     public static void update(EncryptedNote source, EncryptedNote dest) {

@@ -16,11 +16,12 @@
 
 package com.github.kilel.jotter.dao.factory;
 
+import com.github.kilel.jotter.common.AbstractResponse;
 import com.github.kilel.jotter.common.DaoResultCode;
 import com.github.kilel.jotter.common.EncryptedNote;
 import com.github.kilel.jotter.common.EncryptedNoteList;
+import com.github.kilel.jotter.log.LogManager;
 import com.github.kilel.jotter.msg.LoadResponse;
-import com.github.kilel.jotter.msg.UpdateRequest;
 import com.github.kilel.jotter.msg.UpdateResponse;
 
 import java.math.BigInteger;
@@ -31,32 +32,48 @@ import java.util.List;
  */
 public class ResponseFactory {
     public static final LoadResponse createLoadResponse(List<EncryptedNote> notes, BigInteger newLastSynchId) {
-        final EncryptedNoteList result = new EncryptedNoteList();
-        result.getEncryptedNote().addAll(notes);
-
         final LoadResponse response = new LoadResponse();
-        response.setEncryptedNoteList(result);
-        response.setLastSynchId(newLastSynchId);
+        {
+            final EncryptedNoteList result = new EncryptedNoteList();
+            result.getEncryptedNote().addAll(notes);
 
-        response.setResult(DaoResultCode.OK);
+            response.setEncryptedNoteList(result);
+            response.setLastSynchId(newLastSynchId);
+            response.setResult(DaoResultCode.OK);
+        }
         return response;
     }
 
-    public static final LoadResponse createLoadErrorResponse(DaoResultCode code) {
-        final LoadResponse response = new LoadResponse();
-        response.setResult(code);
-        return response;
-    }
-
-    public static final UpdateResponse createUpdateResponse() {
+    public static final UpdateResponse createUpdateResponse(EncryptedNote note) {
         final UpdateResponse response = new UpdateResponse();
-        response.setResult(DaoResultCode.OK);
+        {
+            response.setEncryptedNote(note);
+            response.setResult(DaoResultCode.OK);
+        }
         return response;
     }
 
-    public static final UpdateResponse createUpdateErrorResponse(DaoResultCode code) {
-        final UpdateResponse response = new UpdateResponse();
-        response.setResult(code);
-        return response;
+    /**
+     * Creates error response of any type.
+     *
+     * @param code        Result code.
+     * @param description Error description.
+     * @param type        Response type.
+     * @param <T>         Class of response element.
+     * @return Response with error result.
+     */
+    public static <T extends AbstractResponse> T createErrorResponse(
+            DaoResultCode code, String description, Class<T> type) {
+        try {
+            final T response = type.newInstance();
+            {
+                response.setResult(code);
+                response.setDescription(description);
+            }
+            return response;
+        } catch (Exception e) {
+            LogManager.commonLog().error(String.format("Failed to create response of type %s", type), e);
+            return null;
+        }
     }
 }

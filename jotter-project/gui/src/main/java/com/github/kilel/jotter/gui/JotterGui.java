@@ -16,42 +16,37 @@
 
 package com.github.kilel.jotter.gui;
 
-import com.github.kilel.jotter.dao.DaoBridge;
-import com.github.kilel.jotter.dao.factory.DaoBridgeFactory;
-import com.github.kilel.jotter.encryptor.EncryptionContext;
-import com.github.kilel.jotter.encryptor.impl.EncryptionContextImpl;
+import com.github.kilel.jotter.JotterContext;
 import com.github.kilel.jotter.log.LogManager;
-import com.github.kilel.jotter.util.NotesHolder;
-import com.github.kilel.jotter.util.NotesHolderImpl;
+import com.github.kilel.jotter.util.NoteUtils;
 import com.github.kilel.jotter.util.NotesSynchronizer;
 
 /**
  * Common GUI facade.
  */
 public abstract class JotterGui {
-    private final DaoBridge daoBridge;
-    private final NotesHolder notesHolder;
-    private final EncryptionContext encryptionContext;
     private final NotesSynchronizer notesSynchronizer;
+    private final JotterContext context;
 
     public JotterGui() {
         LogManager.init();
-        daoBridge = new DaoBridgeFactory().create("config"); // TODO implement configuration
-        notesHolder = new NotesHolderImpl();
-        encryptionContext = new EncryptionContextImpl();
-        notesSynchronizer = new NotesSynchronizer(daoBridge, notesHolder, encryptionContext);
+        this.context = new JotterContext("mem");
+        notesSynchronizer = new NotesSynchronizer(context);
+
+        // add log listener
+        context.getHolder().//
+                addListener((x) -> LogManager//
+                .commonLog().debug(//
+                                   String.format("Executed event %s for note [%s]",//
+                                                 x.getType(),//
+                                                 NoteUtils.toString(x.getSource())//
+                                                )//
+                                  )//
+                           );
     }
 
-    protected DaoBridge getDaoBridge() {
-        return daoBridge;
-    }
-
-    public NotesHolder getNotesHolder() {
-        return notesHolder;
-    }
-
-    public EncryptionContext getEncryptionContext() {
-        return encryptionContext;
+    public JotterContext getContext() {
+        return context;
     }
 
     public NotesSynchronizer getNotesSynchronizer() {

@@ -17,12 +17,10 @@
 package com.github.kilel.jotter.command.impl;
 
 import com.github.kilel.jotter.command.Command;
-import com.github.kilel.jotter.dao.DaoBridge;
-import com.github.kilel.jotter.encryptor.EncryptionContext;
+import com.github.kilel.jotter.JotterContext;
 import com.github.kilel.jotter.encryptor.Encryptor;
 import com.github.kilel.jotter.log.LogManager;
 import com.github.kilel.jotter.msg.LoadResponse;
-import com.github.kilel.jotter.util.NotesHolder;
 import org.apache.log4j.Logger;
 
 import java.math.BigInteger;
@@ -34,22 +32,20 @@ import java.util.concurrent.locks.ReentrantLock;
  */
 public class SynchCommand extends Command {
     private final Logger log = LogManager.commonLog();
-    private final NotesHolder holder;
-    private final EncryptionContext encryptionContext;
     private final Lock lock;
-
     private BigInteger lastSynchId = BigInteger.ZERO;
 
-
-    public SynchCommand(DaoBridge daoBridge, NotesHolder holder, EncryptionContext encryptionContext) {
-        super(daoBridge);
-        this.holder = holder;
-        this.encryptionContext = encryptionContext;
+    public SynchCommand(JotterContext context) {
+        super(context);
         this.lock = new ReentrantLock();
     }
 
     @Override
     public void run() {
+        if(Thread.interrupted()) {
+            return;
+        }
+
         // Try to lock synchronization.
         // If it is in progress, no need to start new.
         if (!lock.tryLock()) {
@@ -59,7 +55,7 @@ public class SynchCommand extends Command {
         try {
             log.debug("Starting notes synchronization");
 
-            final LoadResponse response = getDaoBridge().load(getRequestFactory().createLoad(lastSynchId));
+            final LoadResponse response = getContext().getDaoBridge().load(getRequestFactory().createLoad(lastSynchId));
             if (isSuccessful(response)  //
                     && response.getLastSynchId() != null //
                     && lastSynchId.compareTo(response.getLastSynchId()) < 0) {
@@ -69,10 +65,12 @@ public class SynchCommand extends Command {
             response.getEncryptedNoteList().getEncryptedNote().stream() //
                     .forEach((note) -> {
                         final String uniqueId = note.getEncryptorId();
-                        final Encryptor encryptor = encryptionContext.get(uniqueId);
+                        final Encryptor encryptor = getContext().getEncryptionContext().get(uniqueId);
 
                         if (encryptor != null) {
-                            holder.create(encryptor.decrypt(note));
+                            getContext().getHolder().create(encryptor.decrypt(note));
+                        } else {
+                            log.error("Can't find encryptor with ID = " + uniqueId);
                         }
                     });
 
