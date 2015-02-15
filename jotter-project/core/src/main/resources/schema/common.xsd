@@ -87,6 +87,14 @@
                     </xs:documentation>
                 </xs:annotation>
             </xs:enumeration>
+            <xs:enumeration value="NOTE_EXISTANCE_ERROR">
+                <xs:annotation>
+                    <xs:documentation>
+                        When can't find note by category and name.
+                        Or when note exists, but should not.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
         </xs:restriction>
     </xs:simpleType>
 

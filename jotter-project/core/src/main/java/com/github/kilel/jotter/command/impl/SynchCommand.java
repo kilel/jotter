@@ -16,8 +16,9 @@
 
 package com.github.kilel.jotter.command.impl;
 
-import com.github.kilel.jotter.command.Command;
 import com.github.kilel.jotter.JotterContext;
+import com.github.kilel.jotter.command.Command;
+import com.github.kilel.jotter.dao.factory.RequestFactory;
 import com.github.kilel.jotter.encryptor.Encryptor;
 import com.github.kilel.jotter.log.LogManager;
 import com.github.kilel.jotter.msg.LoadResponse;
@@ -55,7 +56,7 @@ public class SynchCommand extends Command {
         try {
             log.debug("Starting notes synchronization");
 
-            final LoadResponse response = getContext().getDaoBridge().load(getRequestFactory().createLoad(lastSynchId));
+            final LoadResponse response = getContext().getDaoBridge().load(RequestFactory.createLoad(lastSynchId));
             if (isSuccessful(response)  //
                     && response.getLastSynchId() != null //
                     && lastSynchId.compareTo(response.getLastSynchId()) < 0) {

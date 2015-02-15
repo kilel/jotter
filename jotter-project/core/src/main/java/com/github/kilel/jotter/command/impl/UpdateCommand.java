@@ -19,8 +19,10 @@ package com.github.kilel.jotter.command.impl;
 import com.github.kilel.jotter.JotterContext;
 import com.github.kilel.jotter.OrdinaryJotterException;
 import com.github.kilel.jotter.command.Command;
+import com.github.kilel.jotter.common.DaoResultCode;
 import com.github.kilel.jotter.common.Note;
 import com.github.kilel.jotter.dao.DaoBridge;
+import com.github.kilel.jotter.dao.factory.RequestFactory;
 import com.github.kilel.jotter.encryptor.Encryptor;
 import com.github.kilel.jotter.log.LogManager;
 import com.github.kilel.jotter.msg.UpdateRequest;
@@ -55,7 +57,7 @@ public class UpdateCommand extends Command {
         final Note dest = doGetDest(source, target);
         final Encryptor encryptor = getContext().getEncryptionContext().get(dest.getEncryptorId());
 
-        final UpdateRequest request = getRequestFactory().createUpdate(encryptor.encrypt(dest));
+        final UpdateRequest request = RequestFactory.createUpdate(encryptor.encrypt(dest));
         final UpdateResponse response = getContext().getDaoBridge().update(request);
 
         doProcessResponse(response, encryptor, source, target);
@@ -68,17 +70,52 @@ public class UpdateCommand extends Command {
         //Create note behavior
         if (createNew) {
             log.debug(String.format("Trying to create note [%s]", NoteUtils.getNotePath(target)));
-            dest = target;
+            dest = NoteUtils.copy(target);
             dest.setId(DaoBridge.ID_TO_CREATE_NEW_NOTE);
+            //check, if can create note
+            checkExistance(dest, false);
         } else if (remove) {
             log.debug(String.format("Trying to remove note [%s]", NoteUtils.getNotePath(source)));
-            dest = source;
+            dest = NoteUtils.copy(source);
+            //check, if can remove note
+            checkExistance(dest, true);
         } else {
             log.debug(String.format("Trying to update note [%s] to [%s]", NoteUtils.getNotePath(source),
                                     NoteUtils.getNotePath(target)));
-            dest = target;
+            //check, that source exists
+            checkExistance(source, true);
+
+            final Note src = getContext().getHolder().get(source.getCategory(), source.getName());
+            dest = NoteUtils.copy(target);
+            dest.setId(src.getId());
+
+            if (target.getValue() == null) {
+                dest.setValue(src.getValue());
+            }
+
+            if (target.getEncryptorId() == null) {
+                dest.setEncryptorId(src.getEncryptorId());
+            }
+
+            if (!NoteUtils.getNotePath(source).equals(NoteUtils.getNotePath(target))) {
+                //Path differs, need to check if can move.
+                checkExistance(target, false);
+            }
         }
         return dest;
+    }
+
+    private void checkExistance(Note dest, boolean ensureExist) {
+        Note check = getContext().getHolder().get(dest.getCategory(), dest.getName());
+        if (check == null && ensureExist) {
+            final String message = String.format("Note with path [%s] must exist, but was not found",
+                                                 NoteUtils.getNotePath(dest));
+            throw new OrdinaryJotterException(DaoResultCode.NOTE_EXISTANCE_ERROR, message);
+        } else if (check != null && !ensureExist) {
+            final String message = String.format("Note with path [%s] must not exist, but was found",
+                                                 NoteUtils.getNotePath(dest));
+            throw new OrdinaryJotterException(DaoResultCode.NOTE_EXISTANCE_ERROR, message);
+        }
     }
 
     private void doProcessResponse(
@@ -113,7 +150,7 @@ public class UpdateCommand extends Command {
          * Result note.
          * Null to remove selected note.
          *
-         * @return
+         * @return Note.
          */
         Note getResultNote();
     }

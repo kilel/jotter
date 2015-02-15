@@ -19,21 +19,15 @@ package com.github.kilel.jotter.command;
 import com.github.kilel.jotter.JotterContext;
 import com.github.kilel.jotter.common.AbstractResponse;
 import com.github.kilel.jotter.common.DaoResultCode;
-import com.github.kilel.jotter.dao.factory.RequestFactory;
 
 /**
  * Describes DAO command.
  */
 public abstract class Command implements Runnable {
-    private final RequestFactory requestFactory = new RequestFactory();
     private final JotterContext context;
 
     public Command(final JotterContext context) {
         this.context= context;
-    }
-
-    public RequestFactory getRequestFactory() {
-        return requestFactory;
     }
 
     public JotterContext getContext() {

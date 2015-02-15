@@ -20,6 +20,11 @@
             <artifactId>jotter-core</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.beust</groupId>
+            <artifactId>jcommander</artifactId>
+            <version>1.30</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -42,7 +47,7 @@
                     </descriptors>
                     <archive>
                         <manifest>
-                            <mainClass>com.github.kilel.jotter.gui.console.ConsoleGui</mainClass>
+                            <mainClass>com.github.kilel.jotter.ui.console.ConsoleUI</mainClass>
                         </manifest>
                     </archive>
                 </configuration>

@@ -1,0 +1,50 @@
+
+#
+# Add with encoded value in parameter:
+#
+add -cat me/internet -name google.com -enc None -encVal YXNrZGpmIGxza2RqZiBzZGxramZuIHNk
+add -cat me/internet -name yandex.ru -enc None -encVal c2xkZmogc2xka2Zqc2xkZg==
+add -cat me/internet -name "yandex.ru (2)" -enc None -encVal c2Q7bGZrIHNsZGtmanNsa2RmamxranNkZmxhIGtzZGpmYXNkbGtmaiBhc2xrZGZqYSBzbGtkamYgYWxrc2RqZmFza2Rqb2lzaiBz
+add -cat me/internet -name facebook_fake -enc None -encVal ZGtqc2xka2YgandvZWlmaiB3b2VmanNsZGYgc2xkZg==
+add -cat me/internet -name facebook_dev -enc None -encVal a2Rqb2VmaSBqd2VmbGtzYWRsIGFrcw==
+add -cat me/card -name "Visa **8375" -enc None -encVal a2VmandvaWRmaiBzbGRrZnNkZnNmc2E=
+add -cat me/card -name "MC **9258" -enc None -encVal b2tyeWttZGZrdiBvZGlqIA==
+
+#
+# Add note end input value safe
+#
+add -cat common/chat -name "Agent D" -enc None -val
+
+#
+# Get note values in clipboard
+#
+get -cat me/internet -name google.com
+get -cat me/internet -name yandex.ru
+get -cat me/internet -name "yandex.ru (2)"
+get -cat me/internet -name facebook_fake
+get -cat me/internet -name facebook_dev
+get -cat me/card -name "Visa **8375"
+get -cat me/card -name "MC **9258"
+get -cat common/chat -name "Agent D"
+
+#
+# List notes
+#
+list
+
+#
+# Update some notes
+#
+update -cat me/internet -name google.com -enc None -val
+update -cat me/internet -name facebook_fake -tgtName fb_tst
+update -cat me/internet -name facebook_dev tgtCat me/test
+
+#
+# Remove notes
+#
+remove -cat me/internet -name google.com
+remove -cat me/internet -name yandex.ru
+remove -cat me/internet -name "yandex.ru (2)"
+
+
+

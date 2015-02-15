@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.github.kilel.jotter.gui;
+package com.github.kilel.jotter.ui;
 
 import com.github.kilel.jotter.JotterContext;
 import com.github.kilel.jotter.log.LogManager;
@@ -22,13 +22,13 @@ import com.github.kilel.jotter.util.NoteUtils;
 import com.github.kilel.jotter.util.NotesSynchronizer;
 
 /**
- * Common GUI facade.
+ * Common UI facade.
  */
-public abstract class JotterGui {
+public abstract class JotterUI {
     private final NotesSynchronizer notesSynchronizer;
     private final JotterContext context;
 
-    public JotterGui() {
+    public JotterUI() {
         LogManager.init();
         this.context = new JotterContext("mem");
         notesSynchronizer = new NotesSynchronizer(context);
@@ -47,10 +47,6 @@ public abstract class JotterGui {
 
     public JotterContext getContext() {
         return context;
-    }
-
-    public NotesSynchronizer getNotesSynchronizer() {
-        return notesSynchronizer;
     }
 
     public final void start() {

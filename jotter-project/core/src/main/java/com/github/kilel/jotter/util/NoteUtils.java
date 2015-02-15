@@ -38,11 +38,30 @@ public class NoteUtils {
         dest.setCategory(source.getCategory());
         dest.setId(source.getId());
         dest.setSynchId(source.getSynchId());
+        dest.setEncryptorId(source.getEncryptorId());
         dest.setValue(source.getValue());
     }
 
+    public static Note createNote(String category, String name) {
+        final Note note = new Note();
+        {
+            note.setCategory(category);
+            note.setName(name);
+        }
+        return note;
+    }
+
+    public static Note createNote(String category, String name, String encryptor, String value) {
+        final Note note = createNote(category, name);
+        {
+            note.setEncryptorId(encryptor);
+            note.setValue(value);
+        }
+        return note;
+    }
+
     public static String getNotePath(Note note) {
-        return String.format("%s.%s", note.getCategory(), note.getId());
+        return String.format("%s.%s", note.getCategory(), note.getName());
     }
 
     public static boolean checkEquals(Note a, Note b) {
@@ -61,12 +80,12 @@ public class NoteUtils {
         dest.setSynchId(source.getSynchId());
         dest.setValue(source.getValue());
         dest.setEncryptorId(source.getEncryptorId());
+        dest.setIsArchived(source.isIsArchived());
     }
 
-
     public static String toString(Note note) {
-        return String.format("Note(category = %s, name = %s, id = %s, synchId = %s, value = %s)", //
-                             note.getCategory(), note.getName(), note.getId(), note.getSynchId(), note.getValue());
+        return String.format("Note(category = %s, name = %s, id = %s, synchId = %s, value = ?)", //
+                             note.getCategory(), note.getName(), note.getId(), note.getSynchId());
     }
 
 
