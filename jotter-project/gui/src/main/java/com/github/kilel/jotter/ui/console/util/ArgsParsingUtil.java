@@ -18,7 +18,6 @@ public class ArgsParsingUtil {
         argsParser.addCommand("update", new ConsoleCommandParams.Update());
         argsParser.addCommand("list", new ConsoleCommandParams.List());
         argsParser.addCommand("stop", new ConsoleCommandParams.Stop());
-        argsParser.addCommand("help", new ConsoleCommandParams.Help());
         return argsParser;
     }
 

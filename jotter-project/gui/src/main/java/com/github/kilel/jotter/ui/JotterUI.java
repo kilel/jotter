@@ -20,13 +20,16 @@ import com.github.kilel.jotter.JotterContext;
 import com.github.kilel.jotter.log.LogManager;
 import com.github.kilel.jotter.util.NoteUtils;
 import com.github.kilel.jotter.util.NotesSynchronizer;
+import org.apache.log4j.Logger;
 
 /**
  * Common UI facade.
  */
 public abstract class JotterUI {
+    private final Logger log = LogManager.commonLog();
     private final NotesSynchronizer notesSynchronizer;
     private final JotterContext context;
+    private boolean isActive = true;
 
     public JotterUI() {
         LogManager.init();
@@ -55,8 +58,19 @@ public abstract class JotterUI {
     }
 
     public final void stop() {
+        log.info("Stopping Jotter UI");
+
+        if (!isActive()) {
+            return;
+        }
+
+        isActive = false;
         notesSynchronizer.stop();
         stopInternal();
+    }
+
+    public boolean isActive() {
+        return isActive;
     }
 
     public abstract void startInternal();
