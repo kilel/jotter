@@ -1,0 +1,142 @@
+#########################################
+# Authentication and access
+#########################################
+
+Application should work in multi-user environment.
+Should be able to change user any time.
+
+For every user should be generated and stored (encrypted) high-safe random sequence (master-key) to encrypt-decrypt data.
+Should be able to access this master-key with several approaches (master-password, fingerprint, secret-file, certificate, OTP, etc)
+
+To log in - user should authenticate with any allowed resource (can choose).
+Last login could be cached, but password should not be (security issue)
+Could activate 2-step authentication?
+
+Should be able to add several access resources of same type (for backup or access share)
+Maybe with restrictions (read only)
+
+There should be no way to get access to data if no auth sequence could be passed.
+Recommend to create backup master-password for emergency cases
+
+To authenticate user (before any other actions) should check access for his root note.
+
+
+#########################################
+# Data encryption
+#########################################
+
+Notes should be encrypted completely (if encryption is set to true, which is default)
+Code, description, data - all private fields.
+
+For general binary sequence of resource data (password, secret-file, etc) access would be provided if:
+- key is generated with H(src_key || salt)
+- master-key is decrypted from resources table for this access method
+- root note is decrypted with no errors and code is equals to "ROOT"
+
+For special cases key could be generates with other algorithms
+
+#########################################
+# Note sources
+#########################################
+
+Should be able to operate several notes sources.
+By default should be created single user source (or asked to import one).
+
+Sources could be created as
+- empty store
+- imported store from existing file
+- shared notes access UID (for service only)
+
+
+#########################################
+# Note import/export
+#########################################
+
+Exported data format:
+- export date
+- auth resources to open
+- set of sources
+- each source contains single root note with connected notes
+- (optional) Configuration block
+
+With this format is achievable:
+- export full store
+- export selected source
+- export selected notes (with or without subtree) to new source
+- allow to access data with own keys or create new master-key and access resources for this data
+- data could be exported with no auth resources: in clear unencrypted format
+- could be formatted with no formatting or with base64 -> bytes to make it hard to read.
+
+
+#########################################
+# Notes synchronization (general)
+#########################################
+
+Algorithm:
+1) request and update user's resources and configs.
+2) request list of sources
+3) for all sources check that it does exists and available. If not - remove locally
+4) request source's hash-tree and check to local hash-tree
+
+
+Hash-tree format
+- key = ID
+- value = struct: self-hash, full-hash + last modified date
+
+Self-hash is H(code, description, data, format)
+Full-hash is H(self-hash, child[i].full_hash, ...)
+
+
+Hash-tree check algorithm
+1) traverse all nodes of the local and remote hash-trees
+2) if node exists on both sides:
+2.1) if full-hash is equal - skip subtree, check next
+2.2) if self-hash is equal - skip current, check childs
+2.3) self-hash is not equal - update only if local timestamp is less then remote
+3) if node exists only on local side:
+3.1) if newer then remote hash-tree - skip
+3.2) is older - remove
+4) if node exists only on remote side:
+4.1) add remote node to local side
+
+
+
+#########################################
+# Notes synchronization (local)
+#########################################
+
+Local changes are exported as full-store to synchronization file each N minutes.
+Synchronization data is encrypted and encoded to hard-to-read format with all user auth resources
+
+Each M minutes synchronization file would be checked for changes.
+
+Synchronization data could be decrypted with master-key.
+
+
+#########################################
+# Notes synchronization (remote)
+#########################################
+
+Required operations to:
+- load list of user's resources
+- load list of user's configs
+- load list of user's sources
+- load list of user's notes from source
+
+
+#########################################
+# Note sharing
+#########################################
+
+????
+
+#Notes could link to another notes.
+#So could share with creating new root node and set of subtree links
+
+
+#########################################
+#
+#########################################
+
+
+

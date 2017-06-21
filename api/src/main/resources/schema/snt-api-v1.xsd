@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<s:schema xmlns="http://github.com/kilel/snt/api/v1" xmlns:s="http://www.w3.org/2001/XMLSchema"
+	targetNamespace="http://github.com/kilel/snt/api/v1" elementFormDefault="qualified" version="${project.version}">
+
+	<s:simpleType name="neString">
+		<s:restriction base="s:string">
+			<s:minLength value="1" />
+			<s:whiteSpace value="collapse" />
+		</s:restriction>
+	</s:simpleType>
+
+	<s:complexType name="encBinary">
+		<s:simpleContent>
+			<s:extension base="s:base64Binary">
+				<s:attribute name="encrypted" type="s:boolean" use="optional">
+					<s:annotation>
+						<s:documentation xml:lang="en">Encryption flag</s:documentation>
+					</s:annotation>
+				</s:attribute>
+			</s:extension>
+		</s:simpleContent>
+	</s:complexType>
+
+	<s:complexType name="Entity">
+		<s:annotation>
+			<s:documentation xml:lang="en">Basic entity (id/code/description)</s:documentation>
+		</s:annotation>
+		<s:sequence>
+			<s:element name="description" type="neString" minOccurs="0" />
+		</s:sequence>
+		<s:attribute name="id" type="s:integer" use="optional" />
+		<s:attribute name="code" type="neString" use="optional" />
+	</s:complexType>
+
+	<s:complexType name="User">
+		<s:annotation>
+			<s:documentation xml:lang="en">User element</s:documentation>
+		</s:annotation>
+		<s:complexContent>
+			<s:extension base="Entity">
+				<s:sequence>
+					<s:element name="rootId" type="s:integer" minOccurs="0">
+						<s:annotation>
+							<s:documentation xml:lang="en">Root Note ID</s:documentation>
+						</s:annotation>
+					</s:element>
+				</s:sequence>
+			</s:extension>
+		</s:complexContent>
+	</s:complexType>
+
+	<s:complexType name="AccessResource">
+		<s:annotation>
+			<s:documentation xml:lang="en">Access resource element</s:documentation>
+		</s:annotation>
+		<s:complexContent>
+			<s:extension base="Entity">
+				<s:sequence>
+					<s:element name="user" type="BaseFilterElem">
+						<s:annotation>
+							<s:documentation xml:lang="en">User filter</s:documentation>
+						</s:annotation>
+					</s:element>
+					<s:element name="type" type="s:string">
+						<s:annotation>
+							<s:documentation xml:lang="en">Resource type</s:documentation>
+						</s:annotation>
+					</s:element>
+					<s:element name="data" type="s:base64Binary">
+						<s:annotation>
+							<s:documentation xml:lang="en">Resource data</s:documentation>
+						</s:annotation>
+					</s:element>
+					<s:element name="salt" type="s:base64Binary">
+						<s:annotation>
+							<s:documentation xml:lang="en">Resource salt</s:documentation>
+						</s:annotation>
+					</s:element>
+				</s:sequence>
+			</s:extension>
+		</s:complexContent>
+	</s:complexType>
+
+	<s:complexType name="NotesSource">
+		<s:annotation>
+			<s:documentation xml:lang="en">Notes source element</s:documentation>
+		</s:annotation>
+		<s:complexContent>
+			<s:extension base="Entity">
+				<s:sequence>
+					<s:element name="user" type="BaseFilterElem">
+						<s:annotation>
+							<s:documentation xml:lang="en">User filter</s:documentation>
+						</s:annotation>
+					</s:element>
+					<s:element name="rootId" type="s:integer" minOccurs="0">
+						<s:annotation>
+							<s:documentation xml:lang="en">Root Note ID</s:documentation>
+						</s:annotation>
+					</s:element>
+				</s:sequence>
+			</s:extension>
+		</s:complexContent>
+	</s:complexType>
+
+	<s:complexType name="Note">
+		<s:annotation>
+			<s:documentation xml:lang="en">Note element</s:documentation>
+		</s:annotation>
+		<s:complexContent>
+			<s:extension base="Entity">
+				<s:sequence>
+					<s:element name="data" type="encBinary">
+						<s:annotation>
+							<s:documentation xml:lang="en">Note data</s:documentation>
+						</s:annotation>
+					</s:element>
+					<s:element name="schema" type="neString" minOccurs="0">
+						<s:annotation>
+							<s:documentation xml:lang="en">Schema code for note data</s:documentation>
+						</s:annotation>
+					</s:element>
+					<s:element name="hash" type="neString" minOccurs="0">
+						<s:annotation>
+							<s:documentation xml:lang="en">Note hash (calculated by server)</s:documentation>
+						</s:annotation>
+					</s:element>
+					<s:element name="updateDate" type="s:dateTime" minOccurs="0">
+						<s:annotation>
+							<s:documentation xml:lang="en">Last update date for note (calculated by server)
+							</s:documentation>
+						</s:annotation>
+					</s:element>
+					<s:element name="notes" type="NoteList" minOccurs="0">
+						<s:annotation>
+							<s:documentation xml:lang="en">Child notes (if required)</s:documentation>
+						</s:annotation>
+					</s:element>
+				</s:sequence>
+				<s:attribute name="id_hi" type="s:integer" use="optional" />
+			</s:extension>
+		</s:complexContent>
+	</s:complexType>
+
+	<s:complexType name="NoteList">
+		<s:sequence>
+			<s:element name="item" type="Note" minOccurs="0" maxOccurs="unbounded" />
+		</s:sequence>
+	</s:complexType>
+
+	<s:complexType name="BaseFilterElem">
+		<s:attribute name="id" type="s:integer" use="optional" />
+		<s:attribute name="code" type="neString" use="optional" />
+	</s:complexType>
+
+</s:schema>

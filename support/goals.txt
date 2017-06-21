@@ -1,0 +1,104 @@
+=================================================
+Description
+Application to create and share notes in plain and encrypted format.
+
+=================================================
+Project name
+- Secure Notes / snt
+- Safe Notes / snt
+
+=================================================
+Desired features
+
+Store
+- notes can be stored locally (local encrypted DB) and in external store (access with service)
+- Store access provider (local/remote) should be easily changed with time (config)
+- allow to use several stores
+- allow to synchronize local (file) DB with clouds
+
+Notes
+- allow to manage note format (general - text, other - site, card, host etc.)
+- allow to manage notes hierarchy
+- allow to set note notification time.
+- allow to set note expiry time (to remote after some time)
+
+API
+- API between local and external store should be same
+- external API should use P2P encryption for all content (key generates with session)
+
+GUI
+- desktop client
+- android client
+- simple web client
+
+Encryption
+- allow to encrypt note with master-password or another type of secure access.
+- allow to change master-password on some cases with other security checks (fingerprint, etc)
+
+Share
+- allow to share part of substore (file or secured link)
+- share access: read, modify
+- share options: current, subtree
+
+Other:
+- ability to create backups with cron
+- lock application when it is not used for X minutes
+
+=================================================
+Goals:
+- improve java skills (java 8, java 9)
+- get in touch with android development
+- Try out libraries and instruments:
+    - spring
+    - kotlin
+
+=================================================
+Libraries and instruments
+- Desktop GUI: JavaFX
+- Web UI: ?
+- Data serialization: JSON
+- Remote API: REST/JSON (maybe JSON-pure API but not RESTful)
+- JAX-RS library: CXF
+- Local DB: HSQLDB, SQLite (both).
+- Remote DB: PostgreSQL
+- Remote application server: ServiceMix (newest)
+- Encryption library: Bouncy Castle
+
+
+=================================================
+
+Plan
+
+Version 0.1.0
+- Simple API (no encryption and notes formats)
+- DB structure (SQLite)
+- Notes sources (simple internal)
+- Simple GUI app to list/save notes
+
+Version 0.1.x
+- Add Notes hierarchy
+- Add notes formats (only one, simple for now)
+
+Version 0.1.x
+- Add notes encryption
+
+Version 0.1.x
+- Add notes export
+- Add notes import
+- Add local synchronization
+
+Version 0.1.x
+- Add notes formats:
+| - Simple password: login + password (hidden)
+| - Site: URL + login + password (hidden)
+
+Version 0.2.0
+- Develop remote access API
+- Add remote access server
+- Add support in GUI for remote connections
+
+Version 0.2.x
+- Support for postgresql (maybe)
+-
+
+
