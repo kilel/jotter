@@ -3,6 +3,11 @@ Users - SN_USERS
 - id        -- PK, ID
 - code      -- UK, user code
 - dscr      -- Some description (optional)
+
+#########################################
+Users - SN_USER_N_ROOT
+- id        -- PK, ID
+- user_id   -- FK SN_UERS, user id
 - root_id   -- FK SN_NOTES - Root note ID (to authenticate user)
 
 

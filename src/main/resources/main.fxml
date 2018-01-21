@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+  ~ Copyright 2017 Kislitsyn Ilya
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<?import javafx.scene.control.Menu?><?import javafx.scene.control.MenuBar?><?import javafx.scene.control.MenuItem?><?import javafx.scene.layout.AnchorPane?><?import javafx.scene.layout.ColumnConstraints?><?import javafx.scene.layout.GridPane?><?import javafx.scene.layout.RowConstraints?>
+<AnchorPane minHeight="400.0" minWidth="600.0" prefHeight="400.0" prefWidth="600.0"
+	xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1"
+	fx:controller="org.github.snt.gui.MainController">
+
+	<children>
+		<MenuBar fx:id="menuBar">
+			<menus>
+				<Menu mnemonicParsing="false" text="Pad">
+					<items>
+						<MenuItem mnemonicParsing="false" text="New" />
+						<MenuItem mnemonicParsing="false" text="Open" />
+						<MenuItem mnemonicParsing="false" text="Close" />
+					</items>
+				</Menu>
+				<Menu mnemonicParsing="false" text="Settings">
+					<items>
+						<MenuItem mnemonicParsing="false" text="Delete" />
+					</items>
+				</Menu>
+				<Menu mnemonicParsing="false" text="Help">
+					<items>
+						<MenuItem mnemonicParsing="false" text="About" />
+					</items>
+				</Menu>
+			</menus>
+		</MenuBar>
+		<AnchorPane layoutY="25.0" prefHeight="400.0" prefWidth="600.0">
+			<children>
+				<GridPane>
+					<rowConstraints>
+						<RowConstraints />
+						<RowConstraints minHeight="10.0" prefHeight="30.0" />
+						<RowConstraints minHeight="10.0" prefHeight="30.0" />
+						<RowConstraints minHeight="10.0" prefHeight="30.0" />
+					</rowConstraints>
+					<columnConstraints>
+						<ColumnConstraints />
+						<ColumnConstraints minWidth="30.0" prefWidth="100.0" />
+						<ColumnConstraints minWidth="30.0" prefWidth="100.0" />
+					</columnConstraints>
+				</GridPane>
+			</children>
+		</AnchorPane>
+	</children>
+</AnchorPane>
