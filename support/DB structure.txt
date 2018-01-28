@@ -17,9 +17,10 @@ Access Resources SN_A_RES
 - user_id   -- UK, FK SN_USERS - User ID
 - code      -- UK, Resource code, default = type code.
 - dscr      -- Resource description (hint to find), optional
-- type_id   -- Resource type (password, secret-file, etc)
-- data      -- Encrypted master-key. Decrypts generally with H(bin_data||salt)
+- type      -- Resource type (password, secret-file, etc)
+- data      -- Encrypted master-key
 - salt      -- Salt
+- check     -- data check to ensure that master-key is recovered correctly. Service constant encrypted with MK.
 
 
 #########################################

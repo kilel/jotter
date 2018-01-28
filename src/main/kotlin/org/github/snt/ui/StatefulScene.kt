@@ -14,24 +14,8 @@
  * limitations under the License.
  */
 
-package org.github.snt.gui
+package org.github.snt.ui
 
-import javafx.fxml.FXMLLoader
-import javafx.scene.Parent
 import javafx.scene.Scene
 
-enum class WindowTypes(val resource: String) {
-    main("/main.fxml"),
-    login("/login.fxml");
-
-    fun buildScene(): StatefulScene {
-        val loader = FXMLLoader()
-
-        WindowTypes::class.java.getResourceAsStream(resource).use {
-            loader.load<Parent>(it)
-        }
-
-        val scene = Scene(loader.getRoot())
-        return StatefulScene(scene, loader.getController())
-    }
-}
+class StatefulScene(val scene: Scene, val controller: Any)

@@ -25,7 +25,7 @@ abstract class AbstractJavaFxSpringBootApplication : Application() {
 
     override fun init() {
         super.init()
-        springContext = SpringApplication.run(DesktopGui::class.java, *Main.INIT_ARGS)
+        springContext = SpringApplication.run(JavaFxUI::class.java, *Main.INIT_ARGS)
         springContext.autowireCapableBeanFactory.autowireBean(this)
     }
 

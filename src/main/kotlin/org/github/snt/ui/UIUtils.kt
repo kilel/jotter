@@ -14,14 +14,18 @@
  * limitations under the License.
  */
 
-package org.github.snt.lib
+package org.github.snt.ui
 
+import javafx.scene.Scene
 import javafx.stage.Stage
 
 fun initWindow(stage: Stage, call: Stage.() -> Unit) {
     stage.call()
 }
 
+fun changeScene(scene: Scene, targetScene: StatefulScene) {
+    val stage = scene.window as Stage
 
-
-
+    stage.scene = targetScene.scene
+    stage.sizeToScene()
+}

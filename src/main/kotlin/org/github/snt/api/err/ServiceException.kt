@@ -14,8 +14,17 @@
  * limitations under the License.
  */
 
-package org.github.snt.gui
+package org.github.snt.api.err
 
-class MainController {
+class ServiceException : RuntimeException {
+    val result: OperationResult
+
+    constructor(result: OperationResult, cause: Throwable?, message: String? = null, vararg args: Any) //
+            : super(message?.format(args) ?: result.message, cause) {
+        this.result = result
+    }
+
+    constructor(result: OperationResult, message: String? = null, vararg args: Any
+    ) : this(result, null, message, args)
 
 }

@@ -16,13 +16,18 @@
   ~ limitations under the License.
   -->
 
-<?import javafx.scene.control.Menu?><?import javafx.scene.control.MenuBar?><?import javafx.scene.control.MenuItem?><?import javafx.scene.layout.AnchorPane?><?import javafx.scene.layout.ColumnConstraints?><?import javafx.scene.layout.GridPane?><?import javafx.scene.layout.RowConstraints?>
-<AnchorPane minHeight="400.0" minWidth="600.0" prefHeight="400.0" prefWidth="600.0"
-	xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1"
-	fx:controller="org.github.snt.gui.MainController">
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TreeView?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane minHeight="300.0" minWidth="400.0" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.github.snt.ui.MainController">
 
 	<children>
-		<MenuBar fx:id="menuBar">
+		<MenuBar fx:id="menuBar" prefHeight="25.0" prefWidth="600.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
 			<menus>
 				<Menu mnemonicParsing="false" text="Pad">
 					<items>
@@ -43,21 +48,34 @@
 				</Menu>
 			</menus>
 		</MenuBar>
-		<AnchorPane layoutY="25.0" prefHeight="400.0" prefWidth="600.0">
+		<AnchorPane layoutY="25.0" prefHeight="375.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="25.0">
 			<children>
-				<GridPane>
-					<rowConstraints>
-						<RowConstraints />
-						<RowConstraints minHeight="10.0" prefHeight="30.0" />
-						<RowConstraints minHeight="10.0" prefHeight="30.0" />
-						<RowConstraints minHeight="10.0" prefHeight="30.0" />
-					</rowConstraints>
-					<columnConstraints>
-						<ColumnConstraints />
-						<ColumnConstraints minWidth="30.0" prefWidth="100.0" />
-						<ColumnConstraints minWidth="30.0" prefWidth="100.0" />
-					</columnConstraints>
-				</GridPane>
+				<SplitPane dividerPositions="0.29797979797979796" minHeight="45.0" minWidth="150.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+					<items>
+						<AnchorPane minHeight="0.0" minWidth="50.0" prefHeight="160.0" prefWidth="100.0">
+							<children>
+								<ScrollPane layoutX="-12.0" layoutY="57.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+									<content>
+										<AnchorPane prefHeight="400.0">
+											<children>
+												<TreeView AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+											</children>
+										</AnchorPane>
+									</content>
+								</ScrollPane>
+							</children>
+						</AnchorPane>
+						<AnchorPane minHeight="0.0" minWidth="100.0" prefHeight="160.0" prefWidth="200.0">
+							<children>
+								<ScrollPane layoutX="181.0" layoutY="63.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+									<content>
+										<AnchorPane />
+									</content>
+								</ScrollPane>
+							</children>
+						</AnchorPane>
+					</items>
+				</SplitPane>
 			</children>
 		</AnchorPane>
 	</children>

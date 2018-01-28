@@ -16,22 +16,29 @@
 
 package org.github.snt.api.dao.repo
 
+import org.github.snt.api.AuthResource
 import org.github.snt.api.User
 import org.github.snt.api.dao.DaoRepo
-import org.github.snt.api.dao.repo.crud.UserCrudRepo
-import org.github.snt.api.filter.BaseFilter
+import org.github.snt.api.dao.repo.crud.AuthResourceCrudRepo
+import org.github.snt.api.filter.AuthResourceFilter
+import org.jasypt.encryption.pbe.PBEByteEncryptor
 
-interface UserRepo : DaoRepo<User, BaseFilter> {
-    override fun getCrudRepo(): UserCrudRepo
-
-    /**
-     * Load user by code.
-     */
-    fun loadByCode(code: String) = loadOne(BaseFilter(code.trim()))
+interface AuthResourceRepo : DaoRepo<AuthResource, AuthResourceFilter> {
+    override fun getCrudRepo(): AuthResourceCrudRepo
 
     /**
-     * Creates new user with predefined password
+     * Tries to authenticate user by password.
+     * @return Master key
      */
-    fun createNewUser(user: User, password: String)
+    fun checkPassword(user: User, password: String): ByteArray
 
+    /**
+     * Builds encryptor for defined password.
+     */
+    fun buildEncryptor(password: String): PBEByteEncryptor
+
+    /**
+     * Builds encryptor for defined master key.
+     */
+    fun buildEncryptor(masterKey: ByteArray): PBEByteEncryptor
 }

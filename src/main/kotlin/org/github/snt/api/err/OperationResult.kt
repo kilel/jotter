@@ -14,17 +14,18 @@
  * limitations under the License.
  */
 
-package org.github.snt.api.dao
-
-import org.github.snt.api.dao.repo.AuthResourceRepo
-import org.github.snt.api.dao.repo.NoteRepo
-import org.github.snt.api.dao.repo.UserRepo
+package org.github.snt.api.err
 
 /**
- * DAO repository store.
+ * Operation execution result.
  */
-interface DaoRepoStore {
-    var userRepo: UserRepo
-    var noteRepo: NoteRepo
-    var authResourceRepo: AuthResourceRepo
+enum class OperationResult(val id: Long, val message: String) {
+    OK(0, "Success"),
+    GENERAL_ERROR(1, "Unexpected error"),
+    UNSUPPORTED(2, "Success"),
+    FORBIDDEN(3, "Success"),
+
+    ITEM_NOT_FOUND(10, "Can't find element by filter"),
+    WRONG_PASSWORD(11, "Password check failed"),
+
 }

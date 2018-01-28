@@ -14,18 +14,17 @@
  * limitations under the License.
  */
 
-package org.github.snt.gui
+package org.github.snt.ui
 
 import javafx.fxml.FXML
+import javafx.scene.control.Label
 import javafx.scene.control.PasswordField
 import javafx.scene.control.TextField
-import javafx.stage.Stage
 import org.github.snt.api.User
 import org.github.snt.api.dao.Dao
-import org.github.snt.api.filter.BaseFilter
+import org.github.snt.api.dao.repo.UserRepo
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier
-import javax.annotation.PostConstruct
 
 class LoginController {
     @FXML
@@ -34,34 +33,40 @@ class LoginController {
     @FXML
     lateinit var passwordField: PasswordField
 
+    @FXML
+    lateinit var errorTextLabel: Label
+
     @Autowired
     lateinit var dao: Dao
+
+    @Autowired
+    lateinit var state: ApplicationState
+
+    val userRepo: UserRepo
+        get() = dao.daoStore.userRepo
+
+    val authResourceRepo
+        get() = dao.daoStore.authResourceRepo
 
     @Autowired
     @Qualifier(value = "mainScene")
     lateinit var mainScene: StatefulScene
 
     @FXML
-    fun initialize() {
-    }
-
-    @PostConstruct
-    fun init() {
-        Thread.sleep(1)
-    }
-
-    @FXML
     fun onLogin() {
-        val login = loginField.text
-
-        // check user exists
-        dao.daoStore.userRepo.loadOne(BaseFilter(login))
+        val user: User
+        val masterKey = try {
+            user = userRepo.loadByCode(loginField.text)
+            authResourceRepo.checkPassword(user, passwordField.text)
+        } catch (cause: Exception) {
+            setErrorTest(cause.message)
+            return
+        }
 
         // open main scene
-        val stage = loginField.scene.window as Stage
-
-        stage.scene = mainScene.scene
-        stage.sizeToScene()
+        changeScene(loginField.scene, mainScene)
+        state.user = user
+        state.masterKey = masterKey
     }
 
     @FXML
@@ -69,9 +74,20 @@ class LoginController {
         val user = User()
         user.code = loginField.text
         user.description = "New user Registered from UI"
-        dao.daoStore.userRepo.save(user)
 
-        // try login after registration
+        try {
+            userRepo.createNewUser(user, passwordField.text)
+        } catch (cause: Exception) {
+            setErrorTest(cause.message)
+            return
+        }
+
+        // try login after successful registration
         onLogin()
+    }
+
+    fun setErrorTest(text: String?)  {
+        errorTextLabel.text = text
+        errorTextLabel.isVisible = true
     }
 }

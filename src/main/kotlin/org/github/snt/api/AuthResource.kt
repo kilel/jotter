@@ -22,8 +22,8 @@ import javax.persistence.*
  * Root note for user.
  */
 @Entity
-@Table(name = "SN_NOTE_SRC")
-class NoteSource() : AbstractEntity {
+@Table(name = "SN_AUTH_RES")
+class AuthResource() : AbstractEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,11 +34,23 @@ class NoteSource() : AbstractEntity {
     @JoinColumn(name = "userId", nullable = false)
     lateinit var user: User
 
-    @OneToOne
-    @JoinColumn(name = "noteId", nullable = false, unique = true)
-    lateinit var note: Note
+    @Column(name = "code", nullable = false, unique = true)
+    lateinit var code: String
 
-    @Column(name = "dscr", nullable = false)
-    var description = "Auto-generated note's source"
+    @Column(name = "dscr", nullable = true)
+    var description = "No description"
 
+    @Column(name = "typeId", nullable = false)
+    var typeId: Long = AuthResourceType.PASSWORD.id
+
+    @Column(name = "data", nullable = false)
+    lateinit var data: ByteArray
+
+    @Column(name = "data_ck", nullable = false)
+    lateinit var check: ByteArray
+
+    constructor(user: User, type: AuthResourceType = AuthResourceType.PASSWORD) : this() {
+        this.user = user
+        this.typeId = type.id
+    }
 }

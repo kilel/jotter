@@ -14,17 +14,18 @@
  * limitations under the License.
  */
 
-package org.github.snt.api.dao
+package org.github.snt.ui
 
-import org.github.snt.api.dao.repo.AuthResourceRepo
-import org.github.snt.api.dao.repo.NoteRepo
-import org.github.snt.api.dao.repo.UserRepo
+import org.github.snt.api.User
+import org.springframework.stereotype.Component
 
 /**
- * DAO repository store.
+ * Application state.
+ * Useful for storing information actual for user and his actions.
  */
-interface DaoRepoStore {
-    var userRepo: UserRepo
-    var noteRepo: NoteRepo
-    var authResourceRepo: AuthResourceRepo
+@Component
+class ApplicationState {
+    var user: User? = null
+    var masterKey: ByteArray? = null
+
 }

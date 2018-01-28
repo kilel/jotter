@@ -14,17 +14,24 @@
  * limitations under the License.
  */
 
-package org.github.snt.api.dao
+package org.github.snt.ui
 
-import org.github.snt.api.dao.repo.AuthResourceRepo
-import org.github.snt.api.dao.repo.NoteRepo
-import org.github.snt.api.dao.repo.UserRepo
+import javafx.fxml.FXMLLoader
+import javafx.scene.Parent
+import javafx.scene.Scene
 
-/**
- * DAO repository store.
- */
-interface DaoRepoStore {
-    var userRepo: UserRepo
-    var noteRepo: NoteRepo
-    var authResourceRepo: AuthResourceRepo
+enum class WindowTypes(val resource: String) {
+    main("/main.fxml"),
+    login("/login.fxml");
+
+    fun buildScene(): StatefulScene {
+        val loader = FXMLLoader()
+
+        WindowTypes::class.java.getResourceAsStream(resource).use {
+            loader.load<Parent>(it)
+        }
+
+        val scene = Scene(loader.getRoot())
+        return StatefulScene(scene, loader.getController())
+    }
 }

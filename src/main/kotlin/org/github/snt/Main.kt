@@ -24,6 +24,6 @@ object Main {
     @JvmStatic
     fun main(args: Array<String>) {
         INIT_ARGS = args
-        Application.launch(DesktopGui::class.java, *args)
+        Application.launch(JavaFxUI::class.java, *args)
     }
 }

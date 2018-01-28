@@ -14,17 +14,8 @@
  * limitations under the License.
  */
 
-package org.github.snt.api.dao
+package org.github.snt.ui
 
-import org.github.snt.api.dao.repo.AuthResourceRepo
-import org.github.snt.api.dao.repo.NoteRepo
-import org.github.snt.api.dao.repo.UserRepo
+class MainController {
 
-/**
- * DAO repository store.
- */
-interface DaoRepoStore {
-    var userRepo: UserRepo
-    var noteRepo: NoteRepo
-    var authResourceRepo: AuthResourceRepo
 }

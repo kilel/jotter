@@ -14,17 +14,26 @@
  * limitations under the License.
  */
 
-package org.github.snt.api.dao
-
-import org.github.snt.api.dao.repo.AuthResourceRepo
-import org.github.snt.api.dao.repo.NoteRepo
-import org.github.snt.api.dao.repo.UserRepo
+package org.github.snt.api
 
 /**
- * DAO repository store.
+ * Defines supported authentication types.
  */
-interface DaoRepoStore {
-    var userRepo: UserRepo
-    var noteRepo: NoteRepo
-    var authResourceRepo: AuthResourceRepo
+enum class AuthResourceType(val id: Long) {
+
+    /**
+     * Password authentication.
+     */
+    PASSWORD(0),
+
+    /**
+     * Authentication with long secure random binary data.
+     */
+    BINARY(1);
+
+    companion object {
+        fun findById(id: Long): AuthResourceType? {
+            return AuthResourceType.values().find { it.id == id }
+        }
+    }
 }

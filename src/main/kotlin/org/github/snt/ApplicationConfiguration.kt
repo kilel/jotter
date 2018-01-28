@@ -16,15 +16,17 @@
 
 package org.github.snt
 
-import org.github.snt.gui.LoginController
-import org.github.snt.gui.StatefulScene
-import org.github.snt.gui.WindowTypes
+import org.github.snt.ui.LoginController
+import org.github.snt.ui.StatefulScene
+import org.github.snt.ui.WindowTypes
+import org.jasypt.salt.RandomSaltGenerator
+import org.jasypt.salt.SaltGenerator
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
 @Configuration
-class ApplicationConfig {
+class ApplicationConfiguration {
 
     @Bean
     @Qualifier(value = "loginScene")
@@ -43,4 +45,8 @@ class ApplicationConfig {
         return WindowTypes.main.buildScene()
     }
 
+    @Bean
+    fun getSaltGenerator(): SaltGenerator {
+        return RandomSaltGenerator()
+    }
 }

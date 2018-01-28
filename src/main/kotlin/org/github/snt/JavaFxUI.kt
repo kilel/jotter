@@ -17,20 +17,21 @@
 package org.github.snt
 
 import javafx.stage.Stage
-import org.github.snt.gui.StatefulScene
-import org.github.snt.lib.initWindow
+import org.github.snt.ui.StatefulScene
+import org.github.snt.ui.initWindow
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.autoconfigure.SpringBootApplication
+import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Lazy
 
 @Lazy
 @SpringBootApplication
-class DesktopGui : AbstractJavaFxSpringBootApplication() {
+@EnableConfigurationProperties(value = [SntConfig::class])
+class JavaFxUI : AbstractJavaFxSpringBootApplication() {
 
-    @Value("ui.name")
-    var appName: String = "SNT - Secure Notepad"
+    @Autowired
+    lateinit var config: SntConfig
 
     @Autowired
     @Qualifier(value = "loginScene")
@@ -42,7 +43,7 @@ class DesktopGui : AbstractJavaFxSpringBootApplication() {
         }
 
         initWindow(rootWindow) {
-            title = appName
+            title = config.ui.name
             scene = loginScene.scene
         }
 

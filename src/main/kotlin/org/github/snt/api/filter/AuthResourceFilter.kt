@@ -14,17 +14,17 @@
  * limitations under the License.
  */
 
-package org.github.snt.api.dao
+package org.github.snt.api.filter
 
-import org.github.snt.api.dao.repo.AuthResourceRepo
-import org.github.snt.api.dao.repo.NoteRepo
-import org.github.snt.api.dao.repo.UserRepo
+import org.github.snt.api.AuthResourceType
+import org.github.snt.api.User
 
-/**
- * DAO repository store.
- */
-interface DaoRepoStore {
-    var userRepo: UserRepo
-    var noteRepo: NoteRepo
-    var authResourceRepo: AuthResourceRepo
+class AuthResourceFilter() : Filter() {
+    var user: User? = null
+    var type: AuthResourceType? = null
+
+    constructor(user: User, type: AuthResourceType) : this() {
+        this.user = user
+        this.type = type
+    }
 }

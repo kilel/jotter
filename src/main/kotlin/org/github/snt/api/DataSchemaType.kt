@@ -21,23 +21,29 @@ package org.github.snt.api
  * It could contain simple unstructured data, or some set of fields.
  * All available sets of data formats are collected in this enum.
  */
-enum class DataSchema {
+enum class DataSchemaType(val id: Long) {
 
     /**
      * Empty note, no data is stored.
      * Mainly used for directories of notes.
      */
-    NONE,
+    NONE(0),
 
     /**
      * Default format: all data is stored in single multiline field.
      */
-    DEFAULT,
+    DEFAULT(1),
 
     /**
      * Password for some account.
      * Contains fields: url, login, password.
      * Password is hidden by default and could be copied without opening.
      */
-    PASSWORD
+    PASSWORD(2);
+
+    companion object {
+        fun findById(id: Long): DataSchemaType? {
+            return DataSchemaType.values().find { it.id == id }
+        }
+    }
 }

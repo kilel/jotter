@@ -14,17 +14,17 @@
  * limitations under the License.
  */
 
-package org.github.snt.api.dao
+package org.github.snt.api.dao.repo.crud
 
-import org.github.snt.api.dao.repo.AuthResourceRepo
-import org.github.snt.api.dao.repo.NoteRepo
-import org.github.snt.api.dao.repo.UserRepo
+import org.github.snt.api.NoteSource
+import org.springframework.data.repository.CrudRepository
+import org.springframework.stereotype.Repository
 
 /**
- * DAO repository store.
+ * Node DAO repository.
  */
-interface DaoRepoStore {
-    var userRepo: UserRepo
-    var noteRepo: NoteRepo
-    var authResourceRepo: AuthResourceRepo
+@Repository
+interface NoteSourceCrudRepo : CrudRepository<NoteSource, Long> {
+
+    fun findByUserId(userId: Long): List<NoteSource>
 }

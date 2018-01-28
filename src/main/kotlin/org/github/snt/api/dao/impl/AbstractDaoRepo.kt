@@ -19,6 +19,8 @@ package org.github.snt.api.dao.impl
 import org.github.snt.api.AbstractEntity
 import org.github.snt.api.dao.Dao
 import org.github.snt.api.dao.DaoRepo
+import org.github.snt.api.err.OperationResult.ITEM_NOT_FOUND
+import org.github.snt.api.err.ServiceException
 import org.github.snt.api.filter.Filter
 import org.springframework.beans.factory.annotation.Autowired
 
@@ -32,13 +34,14 @@ abstract class AbstractDaoRepo<T : AbstractEntity, in F : Filter> : DaoRepo<T, F
     }
 
     override fun loadOne(filter: F): T {
-        return tryLoadOne(filter) ?: throw IllegalStateException("Can't find ${getEntityName()} by filter $filter")
+        return tryLoadOne(filter)
+                ?: throw ServiceException(ITEM_NOT_FOUND, "Can't find ${getEntityName()} by filter $filter")
     }
 
     override fun tryLoadOne(filter: F): T? {
         val items = loadList(filter)
         if (items.size > 1) {
-            throw IllegalStateException("Too many ${getEntityName()} items returned for loadOne operation with filter $filter")
+            throw ServiceException(ITEM_NOT_FOUND, "Too many ${getEntityName()} items returned for loadOne operation with filter $filter")
         }
         return if (items.isEmpty()) null else items[0]
     }

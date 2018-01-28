@@ -16,19 +16,34 @@
 
 package org.github.snt.api.dao.repo.impl
 
+import org.github.snt.SntConfig
+import org.github.snt.api.AuthResource
+import org.github.snt.api.AuthResourceType
 import org.github.snt.api.User
 import org.github.snt.api.dao.impl.AbstractDaoRepo
+import org.github.snt.api.dao.repo.AuthResourceRepo
 import org.github.snt.api.dao.repo.UserRepo
 import org.github.snt.api.dao.repo.crud.UserCrudRepo
 import org.github.snt.api.filter.BaseFilter
+import org.jasypt.salt.SaltGenerator
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
+import javax.transaction.Transactional
 
 @Component
 class UserRepoImpl : AbstractDaoRepo<User, BaseFilter>(), UserRepo {
 
     @Autowired
     lateinit var internalCrudRepo: UserCrudRepo
+
+    @Autowired
+    lateinit var authResourceRepo: AuthResourceRepo
+
+    @Autowired
+    lateinit var saltGenerator: SaltGenerator
+
+    @Autowired
+    lateinit var config: SntConfig
 
     override fun loadList(filter: BaseFilter): List<User> {
         val id = filter.id
@@ -42,6 +57,27 @@ class UserRepoImpl : AbstractDaoRepo<User, BaseFilter>(), UserRepo {
         }
 
         return getCrudRepo().findAll().toList()
+    }
+
+    @Transactional
+    override fun createNewUser(user: User, password: String) {
+        save(user)
+        saveNewUserMainPassword(loadByCode(user.code), password)
+    }
+
+    fun saveNewUserMainPassword(user: User, password: String) {
+        val masterKey = saltGenerator.generateSalt(config.security.masterKeyLength)
+
+        val passwordEncryptor = authResourceRepo.buildEncryptor(password)
+        val masterKeyEncryptor = authResourceRepo.buildEncryptor(masterKey)
+
+        val result = AuthResource(user, AuthResourceType.PASSWORD)
+        result.code = AuthResourceType.PASSWORD.toString()
+        result.description = "Main password for user"
+        result.data = passwordEncryptor.encrypt(masterKey)
+        result.check = masterKeyEncryptor.encrypt(SntConfig.AUTH_RES_CHECK)
+
+        authResourceRepo.save(result)
     }
 
     override fun getCrudRepo(): UserCrudRepo {

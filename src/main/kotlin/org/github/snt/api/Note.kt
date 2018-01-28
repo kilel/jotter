@@ -48,7 +48,7 @@ class Note constructor() : AbstractEntity {
     var data: ByteArray = ByteArray(0)
 
     @Column(name = "schema")
-    var schema: DataSchema = DataSchema.DEFAULT
+    var schemaId: Long = DataSchemaType.DEFAULT.id
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "update_dt")

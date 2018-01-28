@@ -14,8 +14,18 @@
  * limitations under the License.
  */
 
-package org.github.snt.gui
+package org.github.snt.api.dao.repo.crud
 
-import javafx.scene.Scene
+import org.github.snt.api.AuthResource
+import org.springframework.data.repository.CrudRepository
+import org.springframework.stereotype.Repository
 
-class StatefulScene(val scene: Scene, val controller: Any)
+/**
+ * Node DAO repository.
+ */
+@Repository
+interface AuthResourceCrudRepo : CrudRepository<AuthResource, Long> {
+
+    fun findByUserIdAndTypeId(userId: Long?, typeId: Long): AuthResource
+    fun findByUserId(userId: Long?): AuthResource?
+}
