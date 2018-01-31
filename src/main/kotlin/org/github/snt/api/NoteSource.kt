@@ -41,4 +41,9 @@ class NoteSource() : AbstractEntity {
     @Column(name = "dscr", nullable = false)
     var description = "Auto-generated note's source"
 
+    constructor(user: User, note: Note) : this() {
+        this.user = user
+        this.note = note
+    }
+
 }

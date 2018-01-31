@@ -20,11 +20,12 @@ import org.github.snt.SntConfig
 import org.github.snt.api.AuthResource
 import org.github.snt.api.AuthResourceType
 import org.github.snt.api.User
+import org.github.snt.api.dao.filter.BaseFilter
 import org.github.snt.api.dao.impl.AbstractDaoRepo
 import org.github.snt.api.dao.repo.AuthResourceRepo
+import org.github.snt.api.dao.repo.NoteSourceRepo
 import org.github.snt.api.dao.repo.UserRepo
 import org.github.snt.api.dao.repo.crud.UserCrudRepo
-import org.github.snt.api.filter.BaseFilter
 import org.jasypt.salt.SaltGenerator
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
@@ -38,6 +39,9 @@ class UserRepoImpl : AbstractDaoRepo<User, BaseFilter>(), UserRepo {
 
     @Autowired
     lateinit var authResourceRepo: AuthResourceRepo
+
+    @Autowired
+    lateinit var noteSourceRepo: NoteSourceRepo
 
     @Autowired
     lateinit var saltGenerator: SaltGenerator
@@ -61,8 +65,9 @@ class UserRepoImpl : AbstractDaoRepo<User, BaseFilter>(), UserRepo {
 
     @Transactional
     override fun createNewUser(user: User, password: String) {
-        save(user)
-        saveNewUserMainPassword(loadByCode(user.code), password)
+        val savedUser = save(user)
+        saveNewUserMainPassword(savedUser, password)
+        noteSourceRepo.saveUserRoot(savedUser)
     }
 
     fun saveNewUserMainPassword(user: User, password: String) {

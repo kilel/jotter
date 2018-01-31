@@ -44,7 +44,7 @@ class Note constructor() : AbstractEntity {
     @Column(name = "dscr")
     var description = ""
 
-    @Column(name = "data")
+    @Column(name = "data", columnDefinition = "longvarbinary")
     var data: ByteArray = ByteArray(0)
 
     @Column(name = "schema")

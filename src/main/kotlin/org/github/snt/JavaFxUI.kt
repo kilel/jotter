@@ -17,6 +17,7 @@
 package org.github.snt
 
 import javafx.stage.Stage
+import org.bouncycastle.jce.provider.BouncyCastleProvider
 import org.github.snt.ui.StatefulScene
 import org.github.snt.ui.initWindow
 import org.springframework.beans.factory.annotation.Autowired
@@ -24,6 +25,7 @@ import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Lazy
+import java.security.Security
 
 @Lazy
 @SpringBootApplication
@@ -38,6 +40,9 @@ class JavaFxUI : AbstractJavaFxSpringBootApplication() {
     lateinit var loginScene: StatefulScene
 
     override fun start(rootWindow: Stage?) {
+        // add bouncy castle support
+        Security.addProvider(BouncyCastleProvider())
+
         if (rootWindow == null) {
             throw IllegalArgumentException("Scene is empty!")
         }

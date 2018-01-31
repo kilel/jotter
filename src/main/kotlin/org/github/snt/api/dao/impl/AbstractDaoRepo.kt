@@ -19,9 +19,9 @@ package org.github.snt.api.dao.impl
 import org.github.snt.api.AbstractEntity
 import org.github.snt.api.dao.Dao
 import org.github.snt.api.dao.DaoRepo
+import org.github.snt.api.dao.filter.Filter
 import org.github.snt.api.err.OperationResult.ITEM_NOT_FOUND
 import org.github.snt.api.err.ServiceException
-import org.github.snt.api.filter.Filter
 import org.springframework.beans.factory.annotation.Autowired
 
 abstract class AbstractDaoRepo<T : AbstractEntity, in F : Filter> : DaoRepo<T, F> {
@@ -46,8 +46,8 @@ abstract class AbstractDaoRepo<T : AbstractEntity, in F : Filter> : DaoRepo<T, F
         return if (items.isEmpty()) null else items[0]
     }
 
-    override fun save(item: T) {
-        getCrudRepo().save(item)
+    override fun save(item: T) : T{
+        return getCrudRepo().save(item)
     }
 
     override fun remove(filter: F) {

@@ -14,24 +14,14 @@
  * limitations under the License.
  */
 
-package org.github.snt.api.dao.repo
+package org.github.snt.api.dao.filter
 
 import org.github.snt.api.User
-import org.github.snt.api.dao.DaoRepo
-import org.github.snt.api.dao.repo.crud.UserCrudRepo
-import org.github.snt.api.dao.filter.BaseFilter
 
-interface UserRepo : DaoRepo<User, BaseFilter> {
-    override fun getCrudRepo(): UserCrudRepo
+class NoteSourceFilter() : Filter() {
+    var userId: Long? = null
 
-    /**
-     * Load user by code.
-     */
-    fun loadByCode(code: String) = loadOne(BaseFilter(code.trim()))
-
-    /**
-     * Creates new user with predefined password
-     */
-    fun createNewUser(user: User, password: String)
-
+    constructor(user: User) : this() {
+        this.userId = user.id
+    }
 }

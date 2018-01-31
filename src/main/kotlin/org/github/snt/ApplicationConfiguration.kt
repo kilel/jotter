@@ -17,6 +17,7 @@
 package org.github.snt
 
 import org.github.snt.ui.LoginController
+import org.github.snt.ui.MainController
 import org.github.snt.ui.StatefulScene
 import org.github.snt.ui.WindowTypes
 import org.jasypt.salt.RandomSaltGenerator
@@ -43,6 +44,11 @@ class ApplicationConfiguration {
     @Qualifier(value = "mainScene")
     fun getMainScene(): StatefulScene {
         return WindowTypes.main.buildScene()
+    }
+
+    @Bean
+    fun getMainController(): MainController {
+        return getMainScene().controller as MainController
     }
 
     @Bean

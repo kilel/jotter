@@ -19,6 +19,7 @@ package org.github.snt.api.dao.impl
 import org.github.snt.api.dao.DaoRepoStore
 import org.github.snt.api.dao.repo.AuthResourceRepo
 import org.github.snt.api.dao.repo.NoteRepo
+import org.github.snt.api.dao.repo.NoteSourceRepo
 import org.github.snt.api.dao.repo.UserRepo
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
@@ -35,4 +36,6 @@ class DaoRepoStoreImpl : DaoRepoStore {
     @Autowired
     override lateinit var authResourceRepo: AuthResourceRepo
 
+    @Autowired
+    override lateinit var noteSourceRepo: NoteSourceRepo
 }

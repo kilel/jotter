@@ -42,11 +42,11 @@ class LoginController {
     @Autowired
     lateinit var state: ApplicationState
 
-    val userRepo: UserRepo
-        get() = dao.daoStore.userRepo
+    @Autowired
+    lateinit var mainController: MainController
 
-    val authResourceRepo
-        get() = dao.daoStore.authResourceRepo
+    private val userRepo: UserRepo get() = dao.daoStore.userRepo
+    private val authResourceRepo get() = dao.daoStore.authResourceRepo
 
     @Autowired
     @Qualifier(value = "mainScene")
@@ -67,6 +67,7 @@ class LoginController {
         changeScene(loginField.scene, mainScene)
         state.user = user
         state.masterKey = masterKey
+        mainController.refresh()
     }
 
     @FXML
@@ -86,7 +87,7 @@ class LoginController {
         onLogin()
     }
 
-    fun setErrorTest(text: String?)  {
+    fun setErrorTest(text: String?) {
         errorTextLabel.text = text
         errorTextLabel.isVisible = true
     }

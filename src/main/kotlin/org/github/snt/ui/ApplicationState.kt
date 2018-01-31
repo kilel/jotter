@@ -27,5 +27,6 @@ import org.springframework.stereotype.Component
 class ApplicationState {
     var user: User? = null
     var masterKey: ByteArray? = null
+    val expandedNotes = HashSet<Long>()
 
 }

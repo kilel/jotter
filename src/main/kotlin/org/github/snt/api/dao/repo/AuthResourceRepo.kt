@@ -19,8 +19,8 @@ package org.github.snt.api.dao.repo
 import org.github.snt.api.AuthResource
 import org.github.snt.api.User
 import org.github.snt.api.dao.DaoRepo
+import org.github.snt.api.dao.filter.AuthResourceFilter
 import org.github.snt.api.dao.repo.crud.AuthResourceCrudRepo
-import org.github.snt.api.filter.AuthResourceFilter
 import org.jasypt.encryption.pbe.PBEByteEncryptor
 
 interface AuthResourceRepo : DaoRepo<AuthResource, AuthResourceFilter> {

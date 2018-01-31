@@ -18,8 +18,8 @@ package org.github.snt.api.dao.repo
 
 import org.github.snt.api.Note
 import org.github.snt.api.dao.DaoRepo
+import org.github.snt.api.dao.filter.NoteFilter
 import org.github.snt.api.dao.repo.crud.NoteCrudRepo
-import org.github.snt.api.filter.NoteFilter
 
 interface NoteRepo : DaoRepo<Note, NoteFilter> {
     override fun getCrudRepo(): NoteCrudRepo

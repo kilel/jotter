@@ -14,7 +14,14 @@
  * limitations under the License.
  */
 
-package org.github.snt.api.filter
+package org.github.snt.api.dao.filter
 
-class BaseFilter(var code: String? = null) : Filter() {
+import org.github.snt.api.Note
+
+class NoteFilter() : Filter() {
+    var parentId: Long? = null
+
+    constructor(parent: Note) : this() {
+        this.parentId = parent.id
+    }
 }

@@ -58,7 +58,7 @@
 									<content>
 										<AnchorPane prefHeight="400.0">
 											<children>
-												<TreeView AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+												<TreeView fx:id="notesTree" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
 											</children>
 										</AnchorPane>
 									</content>

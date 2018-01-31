@@ -17,7 +17,7 @@
 package org.github.snt.api.dao
 
 import org.github.snt.api.AbstractEntity
-import org.github.snt.api.filter.Filter
+import org.github.snt.api.dao.filter.Filter
 import org.springframework.data.repository.CrudRepository
 
 /**
@@ -36,7 +36,7 @@ interface DaoRepo<T : AbstractEntity, in F : Filter> : DaoProvider {
 
     fun loadList(filter: F): List<T>
 
-    fun save(item: T)
+    fun save(item: T) : T
 
     fun remove(filter: F)
 

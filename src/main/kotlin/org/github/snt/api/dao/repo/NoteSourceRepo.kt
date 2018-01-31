@@ -14,8 +14,16 @@
  * limitations under the License.
  */
 
-package org.github.snt.api.filter
+package org.github.snt.api.dao.repo
 
-class NoteFilter : Filter() {
-    val parentId: Long? = null
+import org.github.snt.api.NoteSource
+import org.github.snt.api.User
+import org.github.snt.api.dao.DaoRepo
+import org.github.snt.api.dao.filter.NoteSourceFilter
+import org.github.snt.api.dao.repo.crud.NoteSourceCrudRepo
+
+interface NoteSourceRepo : DaoRepo<NoteSource, NoteSourceFilter> {
+    override fun getCrudRepo(): NoteSourceCrudRepo
+
+    fun saveUserRoot(user: User)
 }

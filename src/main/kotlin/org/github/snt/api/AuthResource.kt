@@ -43,10 +43,10 @@ class AuthResource() : AbstractEntity {
     @Column(name = "typeId", nullable = false)
     var typeId: Long = AuthResourceType.PASSWORD.id
 
-    @Column(name = "data", nullable = false)
+    @Column(name = "data", nullable = false, columnDefinition = "longvarbinary")
     lateinit var data: ByteArray
 
-    @Column(name = "data_ck", nullable = false)
+    @Column(name = "data_ck", nullable = false, columnDefinition = "longvarbinary")
     lateinit var check: ByteArray
 
     constructor(user: User, type: AuthResourceType = AuthResourceType.PASSWORD) : this() {

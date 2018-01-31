@@ -16,20 +16,19 @@
 
 package org.github.snt.api.dao.repo.impl
 
-import org.bouncycastle.jce.provider.BouncyCastleProvider
 import org.github.snt.SntConfig
 import org.github.snt.api.AuthResource
 import org.github.snt.api.AuthResourceType.PASSWORD
 import org.github.snt.api.User
+import org.github.snt.api.dao.filter.AuthResourceFilter
 import org.github.snt.api.dao.impl.AbstractDaoRepo
 import org.github.snt.api.dao.repo.AuthResourceRepo
 import org.github.snt.api.dao.repo.crud.AuthResourceCrudRepo
 import org.github.snt.api.err.OperationResult
 import org.github.snt.api.err.ServiceException
-import org.github.snt.api.filter.AuthResourceFilter
-import org.github.snt.lib.util.base64
 import org.github.snt.lib.util.equalsNullableBA
-import org.github.snt.lib.util.sha3
+import org.github.snt.lib.util.hex
+import org.github.snt.lib.util.sha1
 import org.jasypt.encryption.pbe.PBEByteEncryptor
 import org.jasypt.encryption.pbe.StandardPBEByteEncryptor
 import org.jasypt.salt.SaltGenerator
@@ -89,16 +88,20 @@ class AuthResourceRepoImpl : AbstractDaoRepo<AuthResource, AuthResourceFilter>()
     }
 
     override fun buildEncryptor(password: String): PBEByteEncryptor {
-        val encryptor = StandardPBEByteEncryptor()
-        encryptor.setPassword(password.trim())
-        encryptor.setProvider(BouncyCastleProvider())
-        encryptor.setSaltGenerator(saltGenerator)
-        encryptor.setAlgorithm(config.security.encryptionAlgo)
-        return encryptor
+        return doBuildEncryptor(password.trim().toByteArray().sha1().hex())
     }
 
     override fun buildEncryptor(masterKey: ByteArray): PBEByteEncryptor {
-        return buildEncryptor(masterKey.sha3().base64())
+        return doBuildEncryptor(masterKey.sha1().hex())
+    }
+
+    private fun doBuildEncryptor(data: String): PBEByteEncryptor {
+        // todo fixme: encryption does not works now with long passwords - need to fix
+        val encryptor = StandardPBEByteEncryptor()
+        encryptor.setPassword(data.trim().substring(0, 4))
+        encryptor.setSaltGenerator(saltGenerator)
+        encryptor.setAlgorithm(config.security.encryptionAlgo.trim())
+        return encryptor
     }
 
     override fun getCrudRepo(): AuthResourceCrudRepo {

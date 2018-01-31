@@ -18,6 +18,7 @@ package org.github.snt.api.dao
 
 import org.github.snt.api.dao.repo.AuthResourceRepo
 import org.github.snt.api.dao.repo.NoteRepo
+import org.github.snt.api.dao.repo.NoteSourceRepo
 import org.github.snt.api.dao.repo.UserRepo
 
 /**
@@ -27,4 +28,5 @@ interface DaoRepoStore {
     var userRepo: UserRepo
     var noteRepo: NoteRepo
     var authResourceRepo: AuthResourceRepo
+    var noteSourceRepo: NoteSourceRepo
 }

@@ -17,37 +17,56 @@
 package org.github.snt.api.dao.repo.impl
 
 import org.github.snt.api.Note
+import org.github.snt.api.NoteSource
+import org.github.snt.api.User
+import org.github.snt.api.dao.filter.NoteSourceFilter
 import org.github.snt.api.dao.impl.AbstractDaoRepo
 import org.github.snt.api.dao.repo.NoteRepo
-import org.github.snt.api.dao.repo.crud.NoteCrudRepo
-import org.github.snt.api.dao.filter.NoteFilter
+import org.github.snt.api.dao.repo.NoteSourceRepo
+import org.github.snt.api.dao.repo.crud.NoteSourceCrudRepo
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
+import javax.transaction.Transactional
 
 @Component
-class NoteRepoImpl : AbstractDaoRepo<Note, NoteFilter>(), NoteRepo {
+class NoteSourceRepoImpl : AbstractDaoRepo<NoteSource, NoteSourceFilter>(), NoteSourceRepo {
     @Autowired
-    lateinit var internalCrudRepo: NoteCrudRepo
+    lateinit var internalCrudRepo: NoteSourceCrudRepo
 
-    override fun loadList(filter: NoteFilter): List<Note> {
+    @Autowired
+    lateinit var noteRepo: NoteRepo
+
+    override fun loadList(filter: NoteSourceFilter): List<NoteSource> {
         val id = filter.id
         if (filter.id != null) {
             return listOfNotNull(getCrudRepo().findOne(id))
         }
 
-        val parentId = filter.parentId
-        if (parentId != null) {
-            return getCrudRepo().findByParentId(parentId)
+        val userId = filter.userId
+        if (userId != null) {
+            return getCrudRepo().findByUserId(userId)
         }
 
         return getCrudRepo().findAll().toList()
     }
 
-    override fun getCrudRepo(): NoteCrudRepo {
+    @Transactional
+    override fun saveUserRoot(user: User) {
+        // create new note (root)
+        var note = Note("root")
+        note.description = "Notes root for user"
+        note = noteRepo.save(note)
+
+        // attach to the user and save here
+        val noteSource = NoteSource(user, note)
+        save(noteSource)
+    }
+
+    override fun getCrudRepo(): NoteSourceCrudRepo {
         return internalCrudRepo
     }
 
     override fun getEntityName(): String {
-        return "note"
+        return "note source"
     }
 }
