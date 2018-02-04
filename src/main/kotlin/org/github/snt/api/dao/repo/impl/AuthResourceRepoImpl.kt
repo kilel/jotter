@@ -18,6 +18,7 @@ package org.github.snt.api.dao.repo.impl
 
 import org.github.snt.SntConfig
 import org.github.snt.api.AuthResource
+import org.github.snt.api.AuthResourceType
 import org.github.snt.api.AuthResourceType.PASSWORD
 import org.github.snt.api.User
 import org.github.snt.api.dao.filter.AuthResourceFilter
@@ -26,11 +27,9 @@ import org.github.snt.api.dao.repo.AuthResourceRepo
 import org.github.snt.api.dao.repo.crud.AuthResourceCrudRepo
 import org.github.snt.api.err.OperationResult
 import org.github.snt.api.err.ServiceException
-import org.github.snt.lib.util.equalsNullableBA
-import org.github.snt.lib.util.hex
-import org.github.snt.lib.util.sha1
-import org.jasypt.encryption.pbe.PBEByteEncryptor
-import org.jasypt.encryption.pbe.StandardPBEByteEncryptor
+import org.github.snt.lib.util.*
+import org.jasypt.digest.StandardByteDigester
+import org.jasypt.digest.StandardStringDigester
 import org.jasypt.salt.SaltGenerator
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
@@ -64,6 +63,24 @@ class AuthResourceRepoImpl : AbstractDaoRepo<AuthResource, AuthResourceFilter>()
         return getCrudRepo().findAll().toList()
     }
 
+    override fun saveUserPassword(user: User, password: String) {
+        val resCheckData = password.buildPasswordBytes()
+        val masterKey = saltGenerator.generateSalt(config.security.masterKeySize)
+
+        val encryptor = buildEncryptor(password)
+        val digister = buildBinDigister()
+
+        val result = AuthResource(user, AuthResourceType.PASSWORD)
+        result.code = AuthResourceType.PASSWORD.toString()
+        result.description = "Main password for user"
+        result.data = encryptor.encrypt(masterKey)
+        result.check = digister.digest(resCheckData)
+
+        save(result)
+    }
+
+    private fun String.buildPasswordBytes(): ByteArray = this.trim().getBytes()
+
     override fun checkPassword(user: User, password: String): ByteArray {
         val userPwdResources = loadList(AuthResourceFilter(user, PASSWORD))
 
@@ -71,37 +88,36 @@ class AuthResourceRepoImpl : AbstractDaoRepo<AuthResource, AuthResourceFilter>()
             throw ServiceException(OperationResult.GENERAL_ERROR, "No password is defined for user, can't authenticate")
         }
 
+        val resCheckData = password.buildPasswordBytes()
         val encryptor = buildEncryptor(password)
+        val digester = buildBinDigister()
 
         val masterKey = userPwdResources.stream()//
-                .map { Pair(it, encryptor.decrypt(it.data)) }//
-                .filter { checkMasterKey(it.first, it.second) }//
-                .map { it.second }//
-                .findAny()
+                .filter { digester.matches(resCheckData, it.check) }
+                .findAny() //
+                .map { encryptor.decrypt(it.data) }
 
         return masterKey.orElseThrow { throw ServiceException(OperationResult.WRONG_PASSWORD) }
     }
 
-    private fun checkMasterKey(resource: AuthResource, masterKey: ByteArray): Boolean {
-        val decryptedCheck = buildEncryptor(masterKey).decrypt(resource.check)
-        return SntConfig.AUTH_RES_CHECK.equalsNullableBA(decryptedCheck)
+    override fun buildEncryptor(password: String): AesEncryptor {
+        return doBuildEncryptor(password.trim().toByteArray().sha512().hex())
     }
 
-    override fun buildEncryptor(password: String): PBEByteEncryptor {
-        return doBuildEncryptor(password.trim().toByteArray().sha1().hex())
+    override fun buildEncryptor(masterKey: ByteArray): AesEncryptor {
+        return doBuildEncryptor(masterKey.sha512().hex())
     }
 
-    override fun buildEncryptor(masterKey: ByteArray): PBEByteEncryptor {
-        return doBuildEncryptor(masterKey.sha1().hex())
+    private fun doBuildEncryptor(data: String): AesEncryptor {
+        return buildAesEncryptor(data, config, saltGenerator)
     }
 
-    private fun doBuildEncryptor(data: String): PBEByteEncryptor {
-        // todo fixme: encryption does not works now with long passwords - need to fix
-        val encryptor = StandardPBEByteEncryptor()
-        encryptor.setPassword(data.trim().substring(0, 4))
-        encryptor.setSaltGenerator(saltGenerator)
-        encryptor.setAlgorithm(config.security.encryptionAlgo.trim())
-        return encryptor
+    private fun buildPwdDigister(): StandardStringDigester {
+        return buildJasyptPwdDigister(config, saltGenerator)
+    }
+
+    private fun buildBinDigister(): StandardByteDigester {
+        return buildJasyptBinDigister(config, saltGenerator)
     }
 
     override fun getCrudRepo(): AuthResourceCrudRepo {

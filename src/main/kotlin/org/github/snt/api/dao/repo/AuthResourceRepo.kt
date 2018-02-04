@@ -21,10 +21,15 @@ import org.github.snt.api.User
 import org.github.snt.api.dao.DaoRepo
 import org.github.snt.api.dao.filter.AuthResourceFilter
 import org.github.snt.api.dao.repo.crud.AuthResourceCrudRepo
-import org.jasypt.encryption.pbe.PBEByteEncryptor
+import org.github.snt.lib.util.AesEncryptor
 
 interface AuthResourceRepo : DaoRepo<AuthResource, AuthResourceFilter> {
     override fun getCrudRepo(): AuthResourceCrudRepo
+
+    /**
+     * Saves main password for user.
+     */
+    fun saveUserPassword(user: User, password: String)
 
     /**
      * Tries to authenticate user by password.
@@ -35,10 +40,10 @@ interface AuthResourceRepo : DaoRepo<AuthResource, AuthResourceFilter> {
     /**
      * Builds encryptor for defined password.
      */
-    fun buildEncryptor(password: String): PBEByteEncryptor
+    fun buildEncryptor(password: String): AesEncryptor
 
     /**
      * Builds encryptor for defined master key.
      */
-    fun buildEncryptor(masterKey: ByteArray): PBEByteEncryptor
+    fun buildEncryptor(masterKey: ByteArray): AesEncryptor
 }

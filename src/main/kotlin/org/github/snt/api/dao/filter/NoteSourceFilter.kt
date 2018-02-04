@@ -18,10 +18,7 @@ package org.github.snt.api.dao.filter
 
 import org.github.snt.api.User
 
-class NoteSourceFilter() : Filter() {
-    var userId: Long? = null
+data class NoteSourceFilter(var userId: Long? = null) : Filter() {
 
-    constructor(user: User) : this() {
-        this.userId = user.id
-    }
+    constructor(user: User) : this(user.id)
 }

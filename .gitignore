@@ -6,3 +6,6 @@
 **target/
 **build/
 **gradle/wrapper
+
+out/**
+support/sample_db*

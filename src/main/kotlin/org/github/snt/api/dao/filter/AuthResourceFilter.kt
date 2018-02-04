@@ -19,12 +19,6 @@ package org.github.snt.api.dao.filter
 import org.github.snt.api.AuthResourceType
 import org.github.snt.api.User
 
-class AuthResourceFilter() : Filter() {
-    var user: User? = null
-    var type: AuthResourceType? = null
-
-    constructor(user: User, type: AuthResourceType) : this() {
-        this.user = user
-        this.type = type
-    }
+data class AuthResourceFilter(var user: User? = null,
+                         var type: AuthResourceType? = null) : Filter() {
 }

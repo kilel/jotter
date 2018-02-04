@@ -17,8 +17,6 @@
 package org.github.snt.api.dao.repo.impl
 
 import org.github.snt.SntConfig
-import org.github.snt.api.AuthResource
-import org.github.snt.api.AuthResourceType
 import org.github.snt.api.User
 import org.github.snt.api.dao.filter.BaseFilter
 import org.github.snt.api.dao.impl.AbstractDaoRepo
@@ -66,23 +64,8 @@ class UserRepoImpl : AbstractDaoRepo<User, BaseFilter>(), UserRepo {
     @Transactional
     override fun createNewUser(user: User, password: String) {
         val savedUser = save(user)
-        saveNewUserMainPassword(savedUser, password)
+        authResourceRepo.saveUserPassword(savedUser, password)
         noteSourceRepo.saveUserRoot(savedUser)
-    }
-
-    fun saveNewUserMainPassword(user: User, password: String) {
-        val masterKey = saltGenerator.generateSalt(config.security.masterKeyLength)
-
-        val passwordEncryptor = authResourceRepo.buildEncryptor(password)
-        val masterKeyEncryptor = authResourceRepo.buildEncryptor(masterKey)
-
-        val result = AuthResource(user, AuthResourceType.PASSWORD)
-        result.code = AuthResourceType.PASSWORD.toString()
-        result.description = "Main password for user"
-        result.data = passwordEncryptor.encrypt(masterKey)
-        result.check = masterKeyEncryptor.encrypt(SntConfig.AUTH_RES_CHECK)
-
-        authResourceRepo.save(result)
     }
 
     override fun getCrudRepo(): UserCrudRepo {

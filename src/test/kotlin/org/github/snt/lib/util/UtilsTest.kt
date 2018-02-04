@@ -14,7 +14,16 @@
  * limitations under the License.
  */
 
-package org.github.snt.api.dao.filter
+package org.github.snt.lib.util
 
-data class BaseFilter(var code: String? = null) : Filter() {
+import org.junit.Assert
+import org.junit.jupiter.api.Test
+
+class UtilsTest {
+
+    @Test
+    fun testSimpleEncryption() {
+        Assert.assertArrayEquals("pwdTest".getBytes(), aggregate("pwd".getBytes(), "Tes".getBytes(), "t".getBytes()))
+    }
+
 }

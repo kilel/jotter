@@ -15,21 +15,31 @@
 #
 
 ## Spring DATASOURCE (DataSourceAutoConfiguration & DataSourceProperties)
-spring.datasource.url = jdbc:h2:file:./support/sample_db
-spring.datasource.username = root
-spring.datasource.password = root
+spring.datasource:
+    url: jdbc:h2:file:./support/sample_db
+    username: root
+    password: root
 
 
 ## Hibernate Properties
-# The SQL dialect makes Hibernate generate better SQL for the chosen database
-spring.jpa.properties.hibernate.dialect = org.hibernate.dialect.H2Dialect
+spring.jpa:
+  # The SQL dialect makes Hibernate generate better SQL for the chosen database
+  properties.hibernate.dialect: org.hibernate.dialect.H2Dialect
+  # Hibernate ddl auto (create, create-drop, validate, update)
+  hibernate.ddl-auto: update
 
-# Hibernate ddl auto (create, create-drop, validate, update)
-spring.jpa.hibernate.ddl-auto = update
+
+# Application settings
+snt:
+  # UI settings
+  ui:
+    name: SNT - Secure notepad
+  # security settings
+  security:
+    master-key-size: 256
+  # encryption settings
+  encryption:
+     keySize: 128
 
 
-
-snt.ui.name = SNT - Secure notepad
-
-snt.security.encryptionAlgo = PBEWithSHA256And256BitAES-CBC-BC
 

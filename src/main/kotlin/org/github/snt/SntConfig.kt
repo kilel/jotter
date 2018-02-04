@@ -20,22 +20,30 @@ import org.springframework.boot.context.properties.ConfigurationProperties
 
 @ConfigurationProperties(prefix = "snt")
 class SntConfig {
-    companion object {
-        /**
-         * Internal constant to check that master key vas successfully recovered.
-         */
-        val AUTH_RES_CHECK = "781877782b3518677fce3c28223b7da84cfeeb85a2c7b9739eb2cdbe6ab7d684aa2e375101ce035de51694b81262731eccb5d75dbdea5b4a1a2e626b128ef045".toByteArray()
-    }
-
     var ui = UI()
-    var security = SntConfig.Security()
+    var security = Security()
+    var encryption = Encryption()
+    var digest = Digest()
 
     class UI {
         lateinit var name: String
     }
 
     class Security {
-        var encryptionAlgo: String = "PBEWithSHA256And256BitAES-CBC-BC"
-        var masterKeyLength = 256
+        var masterKeySize = 256
+
+    }
+
+    class Encryption {
+        // supported 128, 196, 256
+        var keySize = 128
+        var saltSize = 256
+        var iterations = 1000
+    }
+
+    class Digest {
+        var hashAlgo = "SHA-256"
+        var saltSize = 16
+        var iterations = 10_000
     }
 }

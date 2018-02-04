@@ -16,14 +16,80 @@
 
 package org.github.snt.lib.util
 
+import org.bouncycastle.jce.provider.BouncyCastleProvider
+import org.github.snt.SntConfig
 import org.github.snt.lib.util.BinaryFormat.*
 import org.github.snt.lib.util.HashType.*
+import org.jasypt.digest.StandardByteDigester
+import org.jasypt.digest.StandardStringDigester
+import org.jasypt.salt.SaltGenerator
+import java.nio.charset.Charset
 import java.security.MessageDigest
+import java.security.SecureRandom
 import java.util.*
+import java.util.stream.Collectors
+
+fun buildAesEncryptor(data: String, config: SntConfig, saltGenerator: SaltGenerator): AesEncryptor {
+    val encryptor = AesEncryptor(data.trim())
+    encryptor.random = fun(size: Int) = saltGenerator.generateSalt(size)
+    encryptor.keySize = config.encryption.keySize
+    encryptor.keyIterations = config.encryption.iterations
+    encryptor.saltSize = config.encryption.saltSize
+    return encryptor
+}
+
+fun buildJasyptPwdDigister(config: SntConfig, saltGenerator: SaltGenerator): StandardStringDigester {
+    val result = StandardStringDigester()
+    result.setAlgorithm(config.digest.hashAlgo)
+    result.setIterations(config.digest.iterations)
+    result.setSaltSizeBytes(config.digest.saltSize)
+    result.setSaltGenerator(saltGenerator)
+    result.setProviderName(BouncyCastleProvider.PROVIDER_NAME)
+    result.initialize()
+    return result
+}
+
+fun buildJasyptBinDigister(config: SntConfig, saltGenerator: SaltGenerator): StandardByteDigester {
+    val result = StandardByteDigester()
+    result.setAlgorithm(config.digest.hashAlgo)
+    result.setIterations(config.digest.iterations)
+    result.setSaltSizeBytes(config.digest.saltSize)
+    result.setSaltGenerator(saltGenerator)
+    result.setProviderName(BouncyCastleProvider.PROVIDER_NAME)
+    result.initialize()
+    return result
+}
+
+fun aggregate(vararg sources: ByteArray): ByteArray {
+    val sourcesList = Arrays.stream(sources)//
+            .filter { it != null && it.isNotEmpty() }//
+            .collect(Collectors.toList())
+
+    val result = ByteArray(sourcesList.stream().collect(Collectors.summingInt { it.size }))
+    var shift = 0
+    sourcesList.forEach {
+        System.arraycopy(it, 0, result, shift, it.size)
+        shift += it.size
+    }
+
+    return result
+}
+
+fun randomDataBuilder(random: Random = SecureRandom()): (size: Int) -> ByteArray {
+    return fun(size: Int): ByteArray {
+        val result = ByteArray(size)
+        random.nextBytes(result)
+        return result
+    }
+}
 
 fun ByteArray?.equalsNullableBA(data: ByteArray?): Boolean {
     return (this == null && data == null //
             || this != null && data != null && MessageDigest.isEqual(this, data))
+}
+
+fun String.getBytes(): ByteArray {
+    return this.toByteArray(charset = Charset.forName("UTF-8"))
 }
 
 fun Any?.equalsNullable(other: Any?): Boolean {

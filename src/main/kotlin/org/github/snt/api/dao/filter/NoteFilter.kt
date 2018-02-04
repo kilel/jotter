@@ -18,10 +18,7 @@ package org.github.snt.api.dao.filter
 
 import org.github.snt.api.Note
 
-class NoteFilter() : Filter() {
-    var parentId: Long? = null
+data class NoteFilter(var parentId: Long? = null) : Filter() {
 
-    constructor(parent: Note) : this() {
-        this.parentId = parent.id
-    }
+    constructor(parent: Note) : this(parent.id)
 }
