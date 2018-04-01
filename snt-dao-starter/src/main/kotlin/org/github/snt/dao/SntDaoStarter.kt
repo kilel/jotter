@@ -57,13 +57,5 @@ class SntDaoStarter {
 
         return HikariDataSource(hikariConfig)
     }
-//
-//    @Bean
-//    fun getLiquidbase(): SpringLiquibase {
-//        val liquibase = SpringLiquibase()
-//        liquibase.dataSource = getDatasource()
-//        liquibase.changeLog = "classpath:db/changelog/db.changelog-master.yaml"
-//        liquibase.afterPropertiesSet()
-//        return liquibase
-//    }
+
 }
