@@ -1,0 +1,11 @@
+{
+  "hints": [],
+  "groups": [
+    {
+      "sourceType": "org.github.snt.dao.config.SntDaoConfig",
+      "name": "snt.dao",
+      "type": "org.github.snt.dao.config.SntDaoConfig"
+    }
+  ],
+  "properties": []
+}

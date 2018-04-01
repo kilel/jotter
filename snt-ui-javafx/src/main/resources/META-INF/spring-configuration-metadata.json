@@ -1,0 +1,17 @@
+{
+  "hints": [],
+  "groups": [
+    {
+      "sourceType": "org.github.snt.ui.javafx.config.SntUiConfig",
+      "name": "snt.ui",
+      "type": "org.github.snt.ui.javafx.config.SntUiConfig"
+    }
+  ],
+  "properties": [
+    {
+      "sourceType": "org.github.snt.ui.javafx.config.SntUiConfig",
+      "name": "snt.ui.name",
+      "type": "java.lang.String"
+    }
+  ]
+}

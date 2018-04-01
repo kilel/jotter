@@ -1,0 +1,71 @@
+{
+  "hints": [],
+  "groups": [
+    {
+      "sourceType": "org.github.snt.lib.config.SntCoreConfig",
+      "name": "snt.core",
+      "type": "org.github.snt.lib.config.SntCoreConfig"
+    },
+    {
+      "sourceType": "org.github.snt.lib.config.SntCoreConfig",
+      "name": "snt.core.digest",
+      "sourceMethod": "getDigest()",
+      "type": "org.github.snt.lib.config.SntCoreConfig$Digest"
+    },
+    {
+      "sourceType": "org.github.snt.lib.config.SntCoreConfig",
+      "name": "snt.core.encryption",
+      "sourceMethod": "getEncryption()",
+      "type": "org.github.snt.lib.config.SntCoreConfig$Encryption"
+    },
+    {
+      "sourceType": "org.github.snt.lib.config.SntCoreConfig",
+      "name": "snt.core.security",
+      "sourceMethod": "getSecurity()",
+      "type": "org.github.snt.lib.config.SntCoreConfig$Security"
+    }
+  ],
+  "properties": [
+    {
+      "sourceType": "org.github.snt.lib.config.SntCoreConfig$Digest",
+      "name": "snt.core.digest.hash-algo",
+      "type": "java.lang.String"
+    },
+    {
+      "sourceType": "org.github.snt.lib.config.SntCoreConfig$Digest",
+      "defaultValue": 0,
+      "name": "snt.core.digest.iterations",
+      "type": "java.lang.Integer"
+    },
+    {
+      "sourceType": "org.github.snt.lib.config.SntCoreConfig$Digest",
+      "defaultValue": 0,
+      "name": "snt.core.digest.salt-size",
+      "type": "java.lang.Integer"
+    },
+    {
+      "sourceType": "org.github.snt.lib.config.SntCoreConfig$Encryption",
+      "defaultValue": 0,
+      "name": "snt.core.encryption.iterations",
+      "type": "java.lang.Integer"
+    },
+    {
+      "sourceType": "org.github.snt.lib.config.SntCoreConfig$Encryption",
+      "defaultValue": 0,
+      "name": "snt.core.encryption.key-size",
+      "type": "java.lang.Integer"
+    },
+    {
+      "sourceType": "org.github.snt.lib.config.SntCoreConfig$Encryption",
+      "defaultValue": 0,
+      "name": "snt.core.encryption.salt-size",
+      "type": "java.lang.Integer"
+    },
+    {
+      "sourceType": "org.github.snt.lib.config.SntCoreConfig$Security",
+      "defaultValue": 0,
+      "name": "snt.core.security.master-key-size",
+      "type": "java.lang.Integer"
+    }
+  ]
+}
