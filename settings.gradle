@@ -1,1 +1,3 @@
+include 'snt-lib', 'snt-dao-starter', 'snt-ui-javafx'
+
 rootProject.name = 'snt'
