@@ -16,7 +16,7 @@
 
 ## Spring DATASOURCE (DataSourceAutoConfiguration & DataSourceProperties)
 spring.datasource:
-  url: jdbc:h2:file:./support/sample_db
+  url: jdbc:h2:file:../support/sample_db
   username: root
   password: root
 

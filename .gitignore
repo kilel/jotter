@@ -5,7 +5,7 @@
 
 **target/
 **build/
-**gradle/wrapper
+gradle/wrapper/gradle-wrapper.jar
 
 out/**
 support/sample_db*
