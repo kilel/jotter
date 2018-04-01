@@ -26,27 +26,27 @@ import javax.persistence.*
 class AuthResource() : AbstractEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @GeneratedValue
+    @Column
     override var id: Long? = null
 
     @ManyToOne
-    @JoinColumn(name = "userId", nullable = false)
+    @JoinColumn(name = "userId")
     lateinit var user: User
 
-    @Column(name = "code", nullable = false, unique = true)
+    @Column
     lateinit var code: String
 
-    @Column(name = "dscr", nullable = true)
+    @Column(name = "dscr")
     var description = "No description"
 
-    @Column(name = "typeId", nullable = false)
+    @Column(name = "typeId")
     var typeId: Long = AuthResourceType.PASSWORD.id
 
-    @Column(name = "data", nullable = false, columnDefinition = "longvarbinary")
+    @Column(name = "data")
     lateinit var data: ByteArray
 
-    @Column(name = "data_ck", nullable = false, columnDefinition = "longvarbinary")
+    @Column(name = "data_ck")
     lateinit var check: ByteArray
 
     constructor(user: User, type: AuthResourceType = AuthResourceType.PASSWORD) : this() {

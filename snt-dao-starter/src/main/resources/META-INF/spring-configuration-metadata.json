@@ -5,7 +5,52 @@
       "sourceType": "org.github.snt.dao.config.SntDaoConfig",
       "name": "snt.dao",
       "type": "org.github.snt.dao.config.SntDaoConfig"
+    },
+    {
+      "sourceType": "org.github.snt.dao.config.SntDaoConfig",
+      "name": "snt.dao.ds",
+      "sourceMethod": "getDs()",
+      "type": "org.github.snt.dao.config.SntDaoConfig$DS"
     }
   ],
-  "properties": []
+  "properties": [
+    {
+      "sourceType": "org.github.snt.dao.config.SntDaoConfig$DS",
+      "defaultValue": false,
+      "name": "snt.dao.ds.cache-prep-stmts",
+      "type": "java.lang.Boolean"
+    },
+    {
+      "sourceType": "org.github.snt.dao.config.SntDaoConfig$DS",
+      "name": "snt.dao.ds.driver-class",
+      "type": "java.lang.String"
+    },
+    {
+      "sourceType": "org.github.snt.dao.config.SntDaoConfig$DS",
+      "name": "snt.dao.ds.password",
+      "type": "java.lang.String"
+    },
+    {
+      "sourceType": "org.github.snt.dao.config.SntDaoConfig$DS",
+      "defaultValue": 0,
+      "name": "snt.dao.ds.prep-stmt-cache-size",
+      "type": "java.lang.Integer"
+    },
+    {
+      "sourceType": "org.github.snt.dao.config.SntDaoConfig$DS",
+      "defaultValue": 0,
+      "name": "snt.dao.ds.prep-stmt-cache-sql-limit",
+      "type": "java.lang.Integer"
+    },
+    {
+      "sourceType": "org.github.snt.dao.config.SntDaoConfig$DS",
+      "name": "snt.dao.ds.url",
+      "type": "java.lang.String"
+    },
+    {
+      "sourceType": "org.github.snt.dao.config.SntDaoConfig$DS",
+      "name": "snt.dao.ds.user",
+      "type": "java.lang.String"
+    }
+  ]
 }

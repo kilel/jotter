@@ -16,17 +16,54 @@
 
 package org.github.snt.dao
 
+import com.zaxxer.hikari.HikariConfig
+import com.zaxxer.hikari.HikariDataSource
 import org.github.snt.dao.config.SntDaoConfig
 import org.github.snt.lib.config.SntCoreConfig
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure.domain.EntityScan
 import org.springframework.boot.context.properties.EnableConfigurationProperties
+import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.Configuration
+import org.springframework.context.annotation.Primary
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories
+import javax.sql.DataSource
 
 @Configuration
 @ComponentScan
 @EnableJpaRepositories(basePackages = ["org.github.snt.dao.api.repo.spring"])
 @EntityScan(basePackages = ["org.github.snt.dao.api.entity"])
 @EnableConfigurationProperties(value = [SntCoreConfig::class, SntDaoConfig::class])
-class SntDaoStarter
+class SntDaoStarter {
+    @Autowired
+    lateinit var daoConfig: SntDaoConfig
+
+    @Bean
+    @Primary
+    fun getDatasource(): DataSource {
+        val dsConfig = daoConfig.ds
+        val hikariConfig = HikariConfig()
+        hikariConfig.driverClassName = dsConfig.driverClass
+        hikariConfig.jdbcUrl = dsConfig.url
+        hikariConfig.username = dsConfig.user
+        hikariConfig.password = dsConfig.password
+
+        hikariConfig.dataSourceProperties = mapOf(
+                "cachePrepStmts" to dsConfig.cachePrepStmts.toString(),
+                "prepStmtCacheSize" to dsConfig.prepStmtCacheSize.toString(),
+                "prepStmtCacheSqlLimit" to dsConfig.prepStmtCacheSqlLimit.toString()
+        ).toProperties()
+
+        return HikariDataSource(hikariConfig)
+    }
+//
+//    @Bean
+//    fun getLiquidbase(): SpringLiquibase {
+//        val liquibase = SpringLiquibase()
+//        liquibase.dataSource = getDatasource()
+//        liquibase.changeLog = "classpath:db/changelog/db.changelog-master.yaml"
+//        liquibase.afterPropertiesSet()
+//        return liquibase
+//    }
+}

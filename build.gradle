@@ -18,11 +18,27 @@ buildscript {
     ext {
         kotlinVersion = '1.2.30'
         springBootVersion = '1.5.10.RELEASE'
+
+        junit5Version = '5.0.1'
         junit5PluginVersion = '1.0.1'
+        junit5PlatformVersion = '1.0.1'
+
+        liquidbaseVersion = '3.5.5'
+        hikaricpVersion = '2.7.8'
+        hibernateVersion = '5.2.16.Final'
+
+        jasyptVersion = '1.9.2'
+        bcVersion = '1.59'
+
+        commonsCodecVersion = '1.10'
+        commonsLangVersion = '3.7'
+        snakeyamlVersion = '1.20'
     }
+
     repositories {
         mavenCentral()
     }
+
     dependencies {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:$springBootVersion")
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion")
@@ -82,17 +98,19 @@ subprojects {
         testCompile('org.springframework.boot:spring-boot-starter-test')
 
         // common dependencies
-        compile('commons-codec:commons-codec:1.10')
-        compile('commons-lang:commons-lang:2.6')
+        compile("commons-codec:commons-codec:$commonsCodecVersion")
+        compile("org.apache.commons:commons-lang3:$commonsLangVersion")
+        compile("org.yaml:snakeyaml:$snakeyamlVersion")
 
-        compile group: 'org.jasypt', name: 'jasypt', version: '1.9.2'
-        compile group: 'org.bouncycastle', name: 'bcprov-jdk15on', version: '1.59'
+
+        compile("org.jasypt:jasypt:$jasyptVersion")
+        compile("org.bouncycastle:bcprov-jdk15on:$bcVersion")
 
         // junit dependencies
-        testCompile("org.junit.jupiter:junit-jupiter-api:5.0.1")
-        testRuntime("org.junit.jupiter:junit-jupiter-engine:5.0.1")
-        testRuntime('org.junit.platform:junit-platform-launcher:1.0.1')
-        testRuntime('org.junit.platform:junit-platform-runner:1.0.1')
+        testCompile("org.junit.jupiter:junit-jupiter-api:$junit5Version")
+        testRuntime("org.junit.jupiter:junit-jupiter-engine:$junit5Version")
+        testRuntime("org.junit.platform:junit-platform-launcher:$junit5PlatformVersion")
+        testRuntime("org.junit.platform:junit-platform-runner:$junit5PlatformVersion")
 
         // no need for junit4
         //testRuntime('org.junit.vintage:junit-vintage-engine:4.12.1')

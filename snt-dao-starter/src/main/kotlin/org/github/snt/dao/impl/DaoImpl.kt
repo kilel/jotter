@@ -23,8 +23,6 @@ import org.springframework.stereotype.Component
 
 @Component
 class DaoImpl : Dao {
-
     @Autowired
     override lateinit var daoStore: DaoRepoStore
-
 }

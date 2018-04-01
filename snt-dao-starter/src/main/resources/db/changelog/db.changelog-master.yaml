@@ -1,0 +1,12 @@
+databaseChangeLog:
+  - include:
+      file: dbupdate/1.0-user.sql
+  - include:
+      file: dbupdate/1.0-auth-res.sql
+  - include:
+      file: dbupdate/1.0-note.sql
+  - include:
+      file: dbupdate/1.0-note-source.sql
+
+
+

@@ -23,5 +23,16 @@ import org.springframework.boot.context.properties.ConfigurationProperties
  */
 @ConfigurationProperties(prefix = "snt.dao")
 class SntDaoConfig {
+    var ds = DS()
 
+    class DS {
+        lateinit var driverClass: String
+        lateinit var url: String
+        lateinit var user: String
+        lateinit var password: String
+
+        var cachePrepStmts = false
+        var prepStmtCacheSize = 250
+        var prepStmtCacheSqlLimit = 2048
+    }
 }

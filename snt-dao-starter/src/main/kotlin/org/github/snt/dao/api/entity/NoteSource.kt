@@ -26,19 +26,19 @@ import javax.persistence.*
 class NoteSource() : AbstractEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @GeneratedValue
+    @Column
     override var id: Long? = null
 
     @ManyToOne
-    @JoinColumn(name = "userId", nullable = false)
+    @JoinColumn(name = "userId")
     lateinit var user: User
 
     @OneToOne
-    @JoinColumn(name = "noteId", nullable = false, unique = true)
+    @JoinColumn(name = "noteId")
     lateinit var note: Note
 
-    @Column(name = "dscr", nullable = false)
+    @Column(name = "dscr")
     var description = "Auto-generated note's source"
 
     constructor(user: User, note: Note) : this() {

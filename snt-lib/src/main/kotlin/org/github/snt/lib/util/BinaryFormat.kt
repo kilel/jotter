@@ -17,7 +17,7 @@
 package org.github.snt.lib.util
 
 import org.apache.commons.codec.binary.Base32
-import org.apache.commons.lang.StringUtils
+import org.apache.commons.lang3.StringUtils
 import org.bouncycastle.util.BigIntegers
 import org.bouncycastle.util.encoders.Base64
 import java.math.BigInteger

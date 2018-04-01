@@ -21,6 +21,11 @@ dependencies {
     compile('org.springframework.boot:spring-boot-starter-web')
 //    compile('javax.validation:validation-api')
 
+    compile("org.liquibase:liquibase-core:$liquidbaseVersion")
+    compile("com.zaxxer:HikariCP:$hikaricpVersion")
+    compile("org.hibernate:hibernate-hikaricp:$hibernateVersion")
+    compile("org.hibernate:hibernate-core:$hibernateVersion")
+
     compile project(':snt-lib')
 }
 

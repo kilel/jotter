@@ -14,19 +14,19 @@
 # limitations under the License.
 #
 
-## Spring DATASOURCE (DataSourceAutoConfiguration & DataSourceProperties)
-spring.datasource:
+# DB connection settings
+snt.dao.ds:
+  driver-class: org.h2.Driver
   url: jdbc:h2:file:../support/sample_db
-  username: root
+  user: root
   password: root
-
 
 ## Hibernate Properties
 spring.jpa:
   # The SQL dialect makes Hibernate generate better SQL for the chosen database
   properties.hibernate.dialect: org.hibernate.dialect.H2Dialect
   # Hibernate ddl auto (create, create-drop, validate, update)
-  hibernate.ddl-auto: update
+  hibernate.ddl-auto: none
 
 
 # Application settings
@@ -42,5 +42,11 @@ snt.core:
 # UI settings
 snt.ui:
     name: SNT - Secure notepad
+
+
+
+
+
+
 
 

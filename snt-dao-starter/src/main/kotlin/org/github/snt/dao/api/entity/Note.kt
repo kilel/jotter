@@ -18,7 +18,6 @@ package org.github.snt.dao.api.entity
 
 import java.util.*
 import javax.persistence.*
-import javax.validation.constraints.NotNull
 
 /**
  * Represents user note, which contains some data.
@@ -29,25 +28,24 @@ import javax.validation.constraints.NotNull
 class Note constructor() : AbstractEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @GeneratedValue
+    @Column
     override var id: Long? = null
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_hi")
     var parent: Note? = null
 
-    @Column(name = "code", unique = true, nullable = false)
-    @NotNull
+    @Column(name = "code")
     var code = "unknown"
 
     @Column(name = "dscr")
     var description = ""
 
-    @Column(name = "data", columnDefinition = "longvarbinary")
+    @Column(name = "data")
     var data: ByteArray = ByteArray(0)
 
-    @Column(name = "schema")
+    @Column(name = "schema_id")
     var schemaId: Long = DataSchemaType.DEFAULT.id
 
     @Temporal(TemporalType.TIMESTAMP)
