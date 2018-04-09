@@ -17,7 +17,15 @@
 package org.github.snt.ui.javafx.lib
 
 import javafx.scene.Scene
+import javafx.scene.control.Alert
+import javafx.scene.control.Label
+import javafx.scene.control.TextArea
+import javafx.scene.layout.GridPane
+import javafx.scene.layout.Priority
 import javafx.stage.Stage
+import org.github.snt.lib.err.SntException
+import org.github.snt.lib.err.SntResult.GENERAL_ERROR
+import org.github.snt.lib.util.extractStackTrace
 
 fun initWindow(stage: Stage, call: Stage.() -> Unit) {
     stage.call()
@@ -29,3 +37,39 @@ fun changeScene(scene: Scene, targetScene: StatefulScene) {
     stage.scene = targetScene.scene
     stage.sizeToScene()
 }
+
+fun showError(error: Throwable) {
+    val cause = error as? SntException ?: SntException(GENERAL_ERROR, error)
+
+    val alert = Alert(Alert.AlertType.ERROR)
+    alert.title = "Application error"
+    alert.headerText = "Error - ${cause.result}"
+    alert.contentText = cause.message
+
+    alert.dialogPane.expandableContent = buildDialogInfoArea("Stacktrace:", cause.extractStackTrace())
+
+    alert.showAndWait()
+}
+
+fun buildDialogInfoArea(header: String, data: String): GridPane {
+    val label = Label(header)
+
+    val textArea = TextArea(data)
+    textArea.isEditable = false
+    textArea.isWrapText = true
+
+    textArea.maxWidth = java.lang.Double.MAX_VALUE
+    textArea.maxHeight = java.lang.Double.MAX_VALUE
+
+
+    GridPane.setVgrow(textArea, Priority.ALWAYS)
+    GridPane.setHgrow(textArea, Priority.ALWAYS)
+
+    val content = GridPane()
+    content.maxWidth = java.lang.Double.MAX_VALUE
+    content.add(label, 0, 0)
+    content.add(textArea, 0, 1)
+
+    return content
+}
+

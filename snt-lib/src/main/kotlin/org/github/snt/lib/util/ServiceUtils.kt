@@ -23,6 +23,8 @@ import org.github.snt.lib.util.HashType.*
 import org.jasypt.digest.StandardByteDigester
 import org.jasypt.digest.StandardStringDigester
 import org.jasypt.salt.SaltGenerator
+import java.io.PrintWriter
+import java.io.StringWriter
 import java.nio.charset.Charset
 import java.security.MessageDigest
 import java.security.SecureRandom
@@ -190,6 +192,12 @@ fun ByteArray.base64(): String {
 
 fun String.fromBase64(): ByteArray {
     return BASE_64.parse(this)
+}
+
+fun Throwable.extractStackTrace(): String {
+    val writer = StringWriter()
+    this.printStackTrace(PrintWriter(writer))
+    return writer.toString()
 }
 
 

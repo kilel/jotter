@@ -44,6 +44,12 @@ snt.ui:
     name: SNT - Secure notepad
 
 
+# logging settings
+logging:
+  path: ./build/logs
+
+
+
 
 
 

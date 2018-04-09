@@ -20,7 +20,6 @@ import javafx.fxml.FXML
 import javafx.scene.control.TreeItem
 import javafx.scene.control.TreeView
 import org.github.snt.dao.api.entity.Note
-import org.github.snt.dao.api.Dao
 import org.github.snt.dao.api.filter.NoteFilter
 import org.github.snt.dao.api.filter.NoteSourceFilter
 import org.github.snt.ui.javafx.lib.ApplicationState
@@ -28,13 +27,10 @@ import org.springframework.beans.factory.annotation.Autowired
 import java.util.stream.Stream
 import javax.annotation.PostConstruct
 
-class MainController {
+class MainController : AbstractController() {
 
     @FXML
-    lateinit var notesTree: TreeView<Note>
-
-    @Autowired
-    lateinit var dao: Dao
+    lateinit var notesTree: TreeView<NoteItem>
 
     @Autowired
     lateinit var state: ApplicationState
@@ -55,7 +51,7 @@ class MainController {
 
         val sources = noteSourceRepo.loadList(NoteSourceFilter(user))
 
-        val treeRoot = TreeItem<Note>()
+        val treeRoot = TreeItem<NoteItem>()
         treeRoot.isExpanded = true
 
         sources.stream()//
@@ -65,20 +61,25 @@ class MainController {
         notesTree.root = treeRoot
     }
 
-    private fun fillChilds(parent: TreeItem<Note>) {
-        noteRepo.loadList(NoteFilter(parent.value)) //
-                .stream()//
-                .addtoParentNode(parent)
-    }
-
-    fun Stream<Note>.addtoParentNode(parent: TreeItem<Note>) {
+    private fun Stream<Note>.addtoParentNode(parent: TreeItem<NoteItem>) {
         this.sorted { a, b -> a.id!!.compareTo(b.id!!) }
                 .forEach {
-                    val child = TreeItem(it)
+                    val child = TreeItem(NoteItem(it))
                     child.isExpanded = state.expandedNotes.contains(it.id)
                     parent.children.add(child)
                     fillChilds(child)
                 }
     }
 
+    private fun fillChilds(parent: TreeItem<NoteItem>) {
+        noteRepo.loadList(NoteFilter(parent.value.note)) //
+                .stream()//
+                .addtoParentNode(parent)
+    }
+
+    class NoteItem(val note: Note) {
+        override fun toString(): String {
+            return note.code
+        }
+    }
 }

@@ -94,6 +94,7 @@ subprojects {
         // spring dependencies
         compile('org.springframework:spring-core')
         compile('org.springframework.boot:spring-boot-starter')
+        compile('org.springframework.boot:spring-boot-starter-logging')
         runtime('org.springframework.boot:spring-boot-devtools')
         testCompile('org.springframework.boot:spring-boot-starter-test')
 

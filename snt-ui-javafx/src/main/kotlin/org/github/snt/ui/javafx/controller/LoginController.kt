@@ -17,10 +17,8 @@
 package org.github.snt.ui.javafx.controller
 
 import javafx.fxml.FXML
-import javafx.scene.control.Label
 import javafx.scene.control.PasswordField
 import javafx.scene.control.TextField
-import org.github.snt.dao.api.Dao
 import org.github.snt.dao.api.entity.User
 import org.github.snt.dao.api.repo.UserRepo
 import org.github.snt.ui.javafx.lib.ApplicationState
@@ -29,18 +27,12 @@ import org.github.snt.ui.javafx.lib.changeScene
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier
 
-class LoginController {
+class LoginController : AbstractController() {
     @FXML
     lateinit var loginField: TextField
 
     @FXML
     lateinit var passwordField: PasswordField
-
-    @FXML
-    lateinit var errorTextLabel: Label
-
-    @Autowired
-    lateinit var dao: Dao
 
     @Autowired
     lateinit var state: ApplicationState
@@ -62,7 +54,7 @@ class LoginController {
             user = userRepo.loadByCode(loginField.text)
             authResourceRepo.checkPassword(user, passwordField.text)
         } catch (cause: Exception) {
-            setErrorTest(cause.message)
+            onError(cause)
             return
         }
 
@@ -82,16 +74,11 @@ class LoginController {
         try {
             userRepo.createNewUser(user, passwordField.text)
         } catch (cause: Exception) {
-            setErrorTest(cause.message)
+            onError(cause)
             return
         }
 
         // try login after successful registration
         onLogin()
-    }
-
-    fun setErrorTest(text: String?) {
-        errorTextLabel.text = text
-        errorTextLabel.isVisible = true
     }
 }

@@ -8,7 +8,7 @@ create table SN_NOTES (
   dscr      longvarchar,
   data      longvarbinary,
   schema_id bigint,
-  update_dt timestamp with time zone default CURRENT_TIMESTAMP,
+  update_dt timestamp default CURRENT_TIMESTAMP,
 
   constraint UK_SN_NOTES unique (id, id_hi),
 

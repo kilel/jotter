@@ -16,15 +16,16 @@
 
 package org.github.snt.lib.err
 
-class ServiceException : RuntimeException {
-    val result: OperationResult
+/**
+ * Operation execution result.
+ */
+enum class SntResult(val id: Long, val message: String) {
+    OK(0, "Success"),
+    GENERAL_ERROR(1, "Unexpected error"),
+    UNSUPPORTED(2, "Success"),
+    FORBIDDEN(3, "Success"),
 
-    constructor(result: OperationResult, cause: Throwable?, message: String? = null, vararg args: Any) //
-            : super(message?.format(args) ?: result.message, cause) {
-        this.result = result
-    }
-
-    constructor(result: OperationResult, message: String? = null, vararg args: Any
-    ) : this(result, null, message, args)
+    ITEM_NOT_FOUND(10, "Can't find element by filter"),
+    WRONG_PASSWORD(11, "Password check failed"),
 
 }

@@ -14,18 +14,21 @@
  * limitations under the License.
  */
 
-package org.github.snt.lib.err
+package org.github.snt.ui.javafx.controller
 
-/**
- * Operation execution result.
- */
-enum class OperationResult(val id: Long, val message: String) {
-    OK(0, "Success"),
-    GENERAL_ERROR(1, "Unexpected error"),
-    UNSUPPORTED(2, "Success"),
-    FORBIDDEN(3, "Success"),
+import org.github.snt.dao.api.Dao
+import org.github.snt.ui.javafx.lib.showError
+import org.slf4j.LoggerFactory
+import org.springframework.beans.factory.annotation.Autowired
 
-    ITEM_NOT_FOUND(10, "Can't find element by filter"),
-    WRONG_PASSWORD(11, "Password check failed"),
+open class AbstractController {
+    val log = LoggerFactory.getLogger(javaClass)!!
 
+    @Autowired(required = false)
+    lateinit var dao: Dao
+
+    fun onError(error: Throwable) {
+        log.error("Unexpected UI error", error)
+        showError(error)
+    }
 }

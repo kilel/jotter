@@ -25,8 +25,8 @@ import org.github.snt.dao.api.repo.AuthResourceRepo
 import org.github.snt.dao.api.repo.spring.AuthResourceSpringDataRepo
 import org.github.snt.dao.impl.AbstractDaoRepo
 import org.github.snt.lib.config.SntCoreConfig
-import org.github.snt.lib.err.OperationResult
-import org.github.snt.lib.err.ServiceException
+import org.github.snt.lib.err.SntResult
+import org.github.snt.lib.err.SntException
 import org.github.snt.lib.util.*
 import org.jasypt.digest.StandardByteDigester
 import org.jasypt.digest.StandardStringDigester
@@ -85,7 +85,7 @@ class AuthResourceRepoImpl : AbstractDaoRepo<AuthResource, AuthResourceFilter>()
         val userPwdResources = loadList(AuthResourceFilter(user, PASSWORD))
 
         if (userPwdResources.isEmpty()) {
-            throw ServiceException(OperationResult.GENERAL_ERROR, "No password is defined for user, can't authenticate")
+            throw SntException(SntResult.GENERAL_ERROR, "No password is defined for user, can't authenticate")
         }
 
         val resCheckData = password.buildPasswordBytes()
@@ -97,7 +97,7 @@ class AuthResourceRepoImpl : AbstractDaoRepo<AuthResource, AuthResourceFilter>()
                 .findAny() //
                 .map { encryptor.decrypt(it.data) }
 
-        return masterKey.orElseThrow { throw ServiceException(OperationResult.WRONG_PASSWORD) }
+        return masterKey.orElseThrow { throw SntException(SntResult.WRONG_PASSWORD) }
     }
 
     override fun buildEncryptor(password: String): AesEncryptor {
