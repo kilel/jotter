@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-apply plugin: 'kotlin-kapt'
-
 dependencies {
+    compile project(':snt-lib')
+
     compile('org.springframework.boot:spring-boot-starter-data-jpa')
     compile('org.springframework.boot:spring-boot-starter-web')
 //    compile('javax.validation:validation-api')
@@ -25,7 +25,5 @@ dependencies {
     compile("com.zaxxer:HikariCP:$hikaricpVersion")
     compile("org.hibernate:hibernate-hikaricp:$hibernateVersion")
     compile("org.hibernate:hibernate-core:$hibernateVersion")
-
-    compile project(':snt-lib')
 }
 

@@ -49,8 +49,8 @@ class UserRepoImpl : AbstractDaoRepo<User, BaseFilter>(), UserRepo {
 
     override fun loadList(filter: BaseFilter): List<User> {
         val id = filter.id
-        if (filter.id != null) {
-            return listOfNotNull(getSpringDataRepo().findOne(id))
+        if (id != null) {
+            return listOfNotNull(getSpringDataRepo().findById(id).get())
         }
 
         val code = filter.code

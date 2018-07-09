@@ -14,17 +14,17 @@
  * limitations under the License.
  */
 
-bootRepackage {
-    enabled = true
-}
-
 
 apply plugin: 'application'
-
-mainClassName = 'org.github.snt.ui.javafx.Main'
 
 dependencies {
     compile project(':snt-dao-starter')
     runtime('com.h2database:h2')
 }
+
+bootJar {
+    enabled = true
+}
+
+mainClassName = 'org.github.snt.ui.javafx.Main'
 

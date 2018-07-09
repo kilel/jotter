@@ -25,8 +25,8 @@ import org.github.snt.dao.api.repo.AuthResourceRepo
 import org.github.snt.dao.api.repo.spring.AuthResourceSpringDataRepo
 import org.github.snt.dao.impl.AbstractDaoRepo
 import org.github.snt.lib.config.SntCoreConfig
-import org.github.snt.lib.err.SntResult
 import org.github.snt.lib.err.SntException
+import org.github.snt.lib.err.SntResult
 import org.github.snt.lib.util.*
 import org.jasypt.digest.StandardByteDigester
 import org.jasypt.digest.StandardStringDigester
@@ -48,8 +48,8 @@ class AuthResourceRepoImpl : AbstractDaoRepo<AuthResource, AuthResourceFilter>()
 
     override fun loadList(filter: AuthResourceFilter): List<AuthResource> {
         val id = filter.id
-        if (filter.id != null) {
-            return listOfNotNull(getSpringDataRepo().findOne(id))
+        if (id != null) {
+            return listOfNotNull(getSpringDataRepo().findById(id).get())
         }
 
         val user = filter.user

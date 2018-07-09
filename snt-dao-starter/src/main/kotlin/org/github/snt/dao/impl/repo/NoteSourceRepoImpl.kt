@@ -38,8 +38,8 @@ class NoteSourceRepoImpl : AbstractDaoRepo<NoteSource, NoteSourceFilter>(), Note
 
     override fun loadList(filter: NoteSourceFilter): List<NoteSource> {
         val id = filter.id
-        if (filter.id != null) {
-            return listOfNotNull(getSpringDataRepo().findOne(id))
+        if (id != null) {
+            return listOfNotNull(getSpringDataRepo().findById(id).get())
         }
 
         val userId = filter.userId

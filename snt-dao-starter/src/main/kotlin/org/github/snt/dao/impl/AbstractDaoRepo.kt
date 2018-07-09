@@ -20,8 +20,8 @@ import org.github.snt.dao.api.Dao
 import org.github.snt.dao.api.DaoRepo
 import org.github.snt.dao.api.entity.AbstractEntity
 import org.github.snt.dao.api.filter.Filter
-import org.github.snt.lib.err.SntResult.ITEM_NOT_FOUND
 import org.github.snt.lib.err.SntException
+import org.github.snt.lib.err.SntResult.ITEM_NOT_FOUND
 import org.springframework.beans.factory.annotation.Autowired
 
 abstract class AbstractDaoRepo<T : AbstractEntity, in F : Filter> : DaoRepo<T, F> {
@@ -30,7 +30,9 @@ abstract class AbstractDaoRepo<T : AbstractEntity, in F : Filter> : DaoRepo<T, F
     lateinit var internalDao: Dao
 
     override fun loadById(id: Long): T {
-        return getSpringDataRepo().findOne(id)
+        return getSpringDataRepo().findById(id).orElseThrow {
+            throw SntException(ITEM_NOT_FOUND, "Can't find ${getEntityName()} by id $id")
+        }
     }
 
     override fun loadOne(filter: F): T {
@@ -52,8 +54,9 @@ abstract class AbstractDaoRepo<T : AbstractEntity, in F : Filter> : DaoRepo<T, F
 
     override fun remove(filter: F) {
         fillFilterId(filter, mandatory = false)
-        if (filter.id != null) {
-            getSpringDataRepo().delete(filter.id)
+        val id = filter.id
+        if (id != null) {
+            getSpringDataRepo().deleteById(id)
         }
     }
 
