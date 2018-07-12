@@ -17,6 +17,9 @@
 package org.github.snt.ui.javafx.lib
 
 import org.github.snt.dao.api.entity.User
+import org.github.snt.dao.api.repo.AuthResourceRepo
+import org.github.snt.dao.api.repo.UserRepo
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 
 /**
@@ -29,4 +32,28 @@ class ApplicationState {
     var masterKey: ByteArray? = null
     val expandedNotes = HashSet<Long>()
 
+    @Autowired(required = false)
+    private lateinit var userRepo: UserRepo
+
+    @Autowired(required = false)
+    private lateinit var authResourceRepo: AuthResourceRepo
+
+    fun login(userCode: String, password: String) {
+        val currentUser = userRepo.loadByCode(userCode)
+        val currentKey = authResourceRepo.checkPassword(currentUser, password)
+
+        // if everything is OK - init state
+        this.user = currentUser
+        this.masterKey = currentKey
+
+    }
+
+    fun logout() {
+        this.user = null
+        this.masterKey = null
+    }
+
+    fun isLoggedIn(): Boolean {
+        return user != null && masterKey != null
+    }
 }

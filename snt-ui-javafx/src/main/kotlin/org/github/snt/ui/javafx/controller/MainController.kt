@@ -16,70 +16,113 @@
 
 package org.github.snt.ui.javafx.controller
 
+import javafx.application.Platform
 import javafx.fxml.FXML
-import javafx.scene.control.TreeItem
 import javafx.scene.control.TreeView
-import org.github.snt.dao.api.entity.Note
-import org.github.snt.dao.api.filter.NoteFilter
-import org.github.snt.dao.api.filter.NoteSourceFilter
+import javafx.scene.input.KeyCode
+import javafx.scene.input.KeyEvent
+import javafx.scene.layout.AnchorPane
+import org.github.snt.ui.javafx.controller.note.NoteTree
+import org.github.snt.ui.javafx.controller.note.NoteTreeItem
 import org.github.snt.ui.javafx.lib.ApplicationState
+import org.github.snt.ui.javafx.lib.StatefulScene
+import org.github.snt.ui.javafx.lib.changeScene
 import org.springframework.beans.factory.annotation.Autowired
-import java.util.stream.Stream
+import org.springframework.beans.factory.annotation.Qualifier
 import javax.annotation.PostConstruct
 
 class MainController : AbstractController() {
 
     @FXML
-    lateinit var notesTree: TreeView<NoteItem>
+    lateinit var notesTree: TreeView<NoteTreeItem>
+
+    @FXML
+    lateinit var notesContent: AnchorPane
 
     @Autowired
     lateinit var state: ApplicationState
 
-    private val noteSourceRepo get() = dao.daoStore.noteSourceRepo
-    private val noteRepo get() = dao.daoStore.noteRepo
+    private val tree = NoteTree(this)
+
+    @Autowired
+    @Qualifier(value = "loginScene")
+    lateinit var loginScene: StatefulScene
+
+    private val selectedItem get() = notesTree.selectionModel.selectedItem
 
     @PostConstruct
     fun init() {
-        refresh()
+        tree.refreshTree()
     }
 
-    fun refresh() {
-        notesTree.root = null
+    @FXML
+    fun onKeyTyped(event: KeyEvent) {
+        when {
+            event.code == KeyCode.DELETE -> onRemove()
+            event.code == KeyCode.F5 -> onTreeRefresh()
+        }
 
-        // nothing to render if user is not selected
-        val user = state.user ?: return
-
-        val sources = noteSourceRepo.loadList(NoteSourceFilter(user))
-
-        val treeRoot = TreeItem<NoteItem>()
-        treeRoot.isExpanded = true
-
-        sources.stream()//
-                .map { it.note }
-                .addtoParentNode(treeRoot)
-
-        notesTree.root = treeRoot
+        if (event.isControlDown) {
+            when {
+                event.code == KeyCode.N -> onAddChild()
+                event.code == KeyCode.R -> onTreeRefresh()
+            }
+        }
     }
 
-    private fun Stream<Note>.addtoParentNode(parent: TreeItem<NoteItem>) {
-        this.sorted { a, b -> a.id!!.compareTo(b.id!!) }
-                .forEach {
-                    val child = TreeItem(NoteItem(it))
-                    child.isExpanded = state.expandedNotes.contains(it.id)
-                    parent.children.add(child)
-                    fillChilds(child)
-                }
+    @FXML
+    fun onAddChild() {
+        try {
+            tree.addChildNote(selectedItem)
+        } catch (cause: Exception) {
+            onError(cause)
+        }
     }
 
-    private fun fillChilds(parent: TreeItem<NoteItem>) {
-        noteRepo.loadList(NoteFilter(parent.value.note)) //
-                .stream()//
-                .addtoParentNode(parent)
+    @FXML
+    fun onRemove() {
+        try {
+            tree.remove(selectedItem)
+        } catch (cause: Exception) {
+            onError(cause)
+        }
     }
 
-    class NoteItem(val note: Note) {
-        override fun toString(): String {
-            return note.code
+    @FXML
+    fun onRename() {
+        try {
+            tree.startRenaming(selectedItem)
+        } catch (cause: Exception) {
+            onError(cause)
+        }
+    }
+
+    @FXML
+    fun onTreeRefresh() {
+        try {
+            tree.refreshTree()
+        } catch (cause: Exception) {
+            onError(cause)
+        }
+    }
+
+    @FXML
+    fun onLogout() {
+        try {
+            state.logout()
+            changeScene(notesTree.scene, loginScene)
+        } catch (cause: Exception) {
+            onError(cause)
+        }
+    }
+
+    @FXML
+    fun onExit() {
+        try {
+            Platform.exit()
+            System.exit(0)
+        } catch (cause: Exception) {
+            onError(cause)
         }
     }
 }

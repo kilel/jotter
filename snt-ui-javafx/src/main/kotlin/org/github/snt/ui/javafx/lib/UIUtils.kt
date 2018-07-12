@@ -18,6 +18,7 @@ package org.github.snt.ui.javafx.lib
 
 import javafx.scene.Scene
 import javafx.scene.control.Alert
+import javafx.scene.control.ButtonType
 import javafx.scene.control.Label
 import javafx.scene.control.TextArea
 import javafx.scene.layout.GridPane
@@ -38,6 +39,11 @@ fun changeScene(scene: Scene, targetScene: StatefulScene) {
     stage.sizeToScene()
 }
 
+fun closeScene(scene: Scene) {
+    val stage = scene.window as Stage
+    stage.close()
+}
+
 fun showError(error: Throwable) {
     val cause = error as? SntException ?: SntException(GENERAL_ERROR, error)
 
@@ -49,6 +55,13 @@ fun showError(error: Throwable) {
     alert.dialogPane.expandableContent = buildDialogInfoArea("Stacktrace:", cause.extractStackTrace())
 
     alert.showAndWait()
+}
+
+fun requestConfirm(text: String): Boolean {
+    val alert = Alert(Alert.AlertType.CONFIRMATION)
+    alert.title = "Confirmation required"
+    alert.headerText = text
+    return alert.showAndWait().orElse(ButtonType.CANCEL) == ButtonType.OK
 }
 
 fun buildDialogInfoArea(header: String, data: String): GridPane {

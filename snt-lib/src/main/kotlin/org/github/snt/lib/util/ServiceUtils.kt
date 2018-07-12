@@ -30,6 +30,7 @@ import java.security.MessageDigest
 import java.security.SecureRandom
 import java.util.*
 import java.util.stream.Collectors
+import java.util.stream.Stream
 
 fun buildAesEncryptor(data: String, config: SntCoreConfig, saltGenerator: SaltGenerator): AesEncryptor {
     val encryptor = AesEncryptor(data.trim())
@@ -198,6 +199,10 @@ fun Throwable.extractStackTrace(): String {
     val writer = StringWriter()
     this.printStackTrace(PrintWriter(writer))
     return writer.toString()
+}
+
+fun <T> Stream<T>.toList(): List<T> {
+    return this.collect(Collectors.toList())
 }
 
 

@@ -28,13 +28,12 @@ import javax.persistence.*
 class Note constructor() : AbstractEntity {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column
     override var id: Long? = null
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_hi")
-    var parent: Note? = null
+    @Column(name = "id_hi")
+    var parentId: Long? = null
 
     @Column(name = "code")
     var code = "unknown"

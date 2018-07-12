@@ -26,7 +26,7 @@ import javax.persistence.*
 class NoteSource() : AbstractEntity {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column
     override var id: Long? = null
 

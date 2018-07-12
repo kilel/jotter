@@ -26,6 +26,6 @@ import org.springframework.stereotype.Repository
  */
 @Repository
 interface NoteSpringDataRepo : CrudRepository<Note, Long> {
-    @Query("select t from Note t where t.parent.id = ?1")
+    @Query("select t from Note t where t.parentId = ?1")
     fun findByParentId(parentId: Long): List<Note>
 }

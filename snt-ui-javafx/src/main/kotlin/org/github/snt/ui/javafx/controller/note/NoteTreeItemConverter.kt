@@ -14,15 +14,16 @@
  * limitations under the License.
  */
 
-package org.github.snt.dao.api.filter
+package org.github.snt.ui.javafx.controller.note
 
-import org.github.snt.dao.api.entity.Note
+import javafx.util.StringConverter
 
-class NoteFilter(
-        id: Long? = null,
-        var parentId: Long? = null) : Filter(id) {
+class NoteTreeItemConverter : StringConverter<NoteTreeItem>() {
+    override fun toString(source: NoteTreeItem?): String {
+        return source.toString()
+    }
 
-    constructor(item: Note) : this() {
-        this.id = item.id
+    override fun fromString(source: String?): NoteTreeItem {
+        return NoteTreeItem(source)
     }
 }

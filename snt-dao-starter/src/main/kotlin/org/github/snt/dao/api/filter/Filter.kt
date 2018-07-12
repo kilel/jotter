@@ -16,6 +16,6 @@
 
 package org.github.snt.dao.api.filter
 
-open class Filter {
-    var id: Long? = null
+open class Filter(var id: Long? = null) {
+
 }

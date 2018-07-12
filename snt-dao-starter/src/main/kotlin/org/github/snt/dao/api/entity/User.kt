@@ -27,7 +27,7 @@ import javax.validation.constraints.NotNull
 @Table(name = "SN_USERS")
 class User constructor() : AbstractEntity {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column
     override var id: Long? = null
 

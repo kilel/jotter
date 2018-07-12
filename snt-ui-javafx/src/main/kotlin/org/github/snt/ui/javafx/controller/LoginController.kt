@@ -17,8 +17,11 @@
 package org.github.snt.ui.javafx.controller
 
 import javafx.fxml.FXML
+import javafx.scene.control.CheckBox
 import javafx.scene.control.PasswordField
 import javafx.scene.control.TextField
+import javafx.scene.input.KeyCode
+import javafx.scene.input.KeyEvent
 import org.github.snt.dao.api.entity.User
 import org.github.snt.dao.api.repo.UserRepo
 import org.github.snt.ui.javafx.lib.ApplicationState
@@ -29,19 +32,21 @@ import org.springframework.beans.factory.annotation.Qualifier
 
 class LoginController : AbstractController() {
     @FXML
-    lateinit var loginField: TextField
+    private lateinit var loginField: TextField
 
     @FXML
-    lateinit var passwordField: PasswordField
+    private lateinit var passwordField: PasswordField
+
+    @FXML
+    private lateinit var needStayLogged: CheckBox
 
     @Autowired
-    lateinit var state: ApplicationState
+    private lateinit var state: ApplicationState
 
     @Autowired
-    lateinit var mainController: MainController
+    private lateinit var mainController: MainController
 
     private val userRepo: UserRepo get() = dao.daoStore.userRepo
-    private val authResourceRepo get() = dao.daoStore.authResourceRepo
 
     @Autowired
     @Qualifier(value = "mainScene")
@@ -49,20 +54,25 @@ class LoginController : AbstractController() {
 
     @FXML
     fun onLogin() {
-        val user: User
-        val masterKey = try {
-            user = userRepo.loadByCode(loginField.text)
-            authResourceRepo.checkPassword(user, passwordField.text)
+        try {
+            state.login(loginField.text, passwordField.text)
         } catch (cause: Exception) {
             onError(cause)
             return
         }
 
-        // open main scene
-        changeScene(loginField.scene, mainScene)
-        state.user = user
-        state.masterKey = masterKey
-        mainController.refresh()
+        if (state.isLoggedIn()) {
+            // open main scene
+            changeScene(loginField.scene, mainScene)
+            mainController.init()
+        }
+    }
+
+    @FXML
+    fun onLoginByKey(event: KeyEvent) {
+        if (event.code == KeyCode.ENTER) {
+            onLogin()
+        }
     }
 
     @FXML
@@ -80,5 +90,12 @@ class LoginController : AbstractController() {
 
         // try login after successful registration
         onLogin()
+    }
+
+    @FXML
+    fun onRegisterByKey(event: KeyEvent) {
+        if (event.code == KeyCode.ENTER) {
+            onRegister()
+        }
     }
 }
