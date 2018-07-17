@@ -21,7 +21,8 @@ import javafx.fxml.FXML
 import javafx.scene.control.TreeView
 import javafx.scene.input.KeyCode
 import javafx.scene.input.KeyEvent
-import javafx.scene.layout.AnchorPane
+import javafx.scene.layout.FlowPane
+import javafx.scene.layout.GridPane
 import org.github.snt.ui.javafx.controller.note.NoteTree
 import org.github.snt.ui.javafx.controller.note.NoteTreeItem
 import org.github.snt.ui.javafx.lib.ApplicationState
@@ -37,7 +38,13 @@ class MainController : AbstractController() {
     lateinit var notesTree: TreeView<NoteTreeItem>
 
     @FXML
-    lateinit var notesContent: AnchorPane
+    lateinit var contentRootGrid: GridPane
+
+    @FXML
+    lateinit var contentGrid: GridPane
+
+    @FXML
+    lateinit var buttonsPane: FlowPane
 
     @Autowired
     lateinit var state: ApplicationState
@@ -89,6 +96,17 @@ class MainController : AbstractController() {
     }
 
     @FXML
+    fun onEdit() {
+        try {
+            buttonsPane.isVisible = true
+
+            tree.onSelected(selectedItem, isEdit = true)
+        } catch (cause: Exception) {
+            onError(cause)
+        }
+    }
+
+    @FXML
     fun onRename() {
         try {
             tree.startRenaming(selectedItem)
@@ -124,5 +142,18 @@ class MainController : AbstractController() {
         } catch (cause: Exception) {
             onError(cause)
         }
+    }
+
+    @FXML
+    fun saveNoteContent() {
+        buttonsPane.isVisible = false
+        tree.updateNoteDetails(selectedItem)
+        tree.onSelected(selectedItem, isEdit = false)
+    }
+
+    @FXML
+    fun cancelEdit() {
+        buttonsPane.isVisible = false
+        tree.onSelected(selectedItem, isEdit = false)
     }
 }

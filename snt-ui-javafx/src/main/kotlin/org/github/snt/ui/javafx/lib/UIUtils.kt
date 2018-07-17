@@ -16,11 +16,13 @@
 
 package org.github.snt.ui.javafx.lib
 
+import com.sun.javafx.scene.control.skin.TextAreaSkin
+import javafx.scene.Node
 import javafx.scene.Scene
-import javafx.scene.control.Alert
-import javafx.scene.control.ButtonType
-import javafx.scene.control.Label
-import javafx.scene.control.TextArea
+import javafx.scene.control.*
+import javafx.scene.input.KeyCode
+import javafx.scene.input.KeyEvent
+import javafx.scene.layout.Background
 import javafx.scene.layout.GridPane
 import javafx.scene.layout.Priority
 import javafx.stage.Stage
@@ -84,5 +86,75 @@ fun buildDialogInfoArea(header: String, data: String): GridPane {
     content.add(textArea, 0, 1)
 
     return content
+}
+
+fun newLabel(text: String = "", isUnderlined: Boolean = false): Label {
+    val result = Label(text)
+    result.isWrapText = true
+    result.isUnderline = isUnderlined
+    return result
+}
+
+fun newTextField(text: String = "", id: String? = null, isEditable: Boolean = true): Node {
+    if (!isEditable) {
+        return Label(text)
+    }
+
+    val result = TextField()
+    result.text = text
+    result.id = id
+    return result
+}
+
+fun newPasswordField(text: String = "", id: String? = null, isEditable: Boolean = true): Node {
+    if (!isEditable) {
+        // TODO add context menu to copy value to the buffer
+        return Label("******")
+    }
+
+    val result = PasswordField()
+    result.text = text
+    result.id = id
+    return result
+}
+
+/**
+ * Creates text area with correct behavior.
+ * @param text Text to fill area with
+ * @param id Area ID
+ * @return Correct text area
+ */
+fun newTextArea(text: String = "", id: String? = null, isEditable: Boolean = true, background: Background? = null): Node {
+//    if (!isEditable) {
+//        return newLabel(text)
+//    }
+
+    val result = TextArea(text)
+    result.id = id
+    result.isWrapText = true
+
+    if (background != null) {
+        result.background = background
+    }
+
+    if (!isEditable) {
+        result.isEditable = false
+    }
+
+    result.addEventHandler(KeyEvent.KEY_PRESSED) { event ->
+        val source = event.source as TextArea
+        val skin = source.skin as TextAreaSkin
+
+        if (event.code == KeyCode.TAB && !event.isControlDown) {
+            if (event.isShiftDown) {
+                skin.behavior.traversePrevious()
+            } else {
+                skin.behavior.traverseNext()
+            }
+            event.consume()
+        }
+    }
+
+    return result
 }
 
